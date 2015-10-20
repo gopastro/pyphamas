@@ -1,0 +1,218 @@
+#!/usr/bin/env python
+"""
+From the original byu_slave.py from 
+@author Richard Black
+"""
+
+from optparse import OptionParser
+#from elementtree.ElementTree import parse
+from xml.etree.ElementTree import parse
+
+import errno
+import socket
+import time
+from pyphamas.network import msg_parse
+from pyphamas.network import res_manage
+import sys
+import re
+import os
+import subprocess
+
+# Set up command-line option parsing
+parser = OptionParser()
+
+# -l will let the user specify what the base name of the log file should be
+# default is "output.log"
+parser.add_option("-l", "--log",
+                  action="store", type="string", dest="logfile",
+                  help="specify log filename")
+
+# -c will let the user specify a configuration file
+# default is "config.xml"
+parser.add_option("-c", "--config",
+		  action="store", type="string", dest="config_file",
+		  help="specify an xml configuration file")
+
+parser.add_option("-s", "--simulate",
+		  action="store_true", dest="simulate",
+		  help="put the system into simulation mode")
+
+parser.add_option("-n", "--notes",
+                  action="store", dest="notes",
+                  help="append observation specific notes to the log file")
+
+parser.add_option("-d", "--dir",
+                  action="store", dest="save_dir",
+                  help="specify directory for data files to be saved to")
+                  
+(options, args) = parser.parse_args()
+
+# Logging class, which prints to both the terminal and log file
+class Logger(object):
+    def __init__(self, filename="output.log"):
+        self.terminal = sys.stdout
+        self.log = open(filename, "a")
+        
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+# Check for -l switch and set log file name
+logfile = "output.log";
+if options.logfile:
+    logfile = options.logfile
+
+# Check for -c switch and set configuration file name
+config_file = "config.xml";
+if options.config_file:
+    config_file = options.config_file
+else:
+    print "BYU: A configuration file must be specified!"
+    exit()
+
+if options.simulate:
+    options.simulate = True
+else:
+    options.simulate = False
+
+# Initialze a logging object
+original = sys.stdout
+sys.stdout = Logger(logfile)
+
+print sys.argv
+
+# Print header information
+print "BYU: Saving logs to " + logfile
+print "BYU: Parsing configuration file " + config_file
+
+# Create a message parser object
+parser = msg_parse.parser(config_file, options.simulate)
+manager = res_manage.manager(config_file, options.simulate)
+
+# Read config file for header and IP information
+my_file = open(config_file, "r")
+print my_file.read()
+
+my_file.seek(0)
+
+tree = parse(my_file)
+root = tree.getroot()
+parent = root.find("header")
+
+#notes = parent.find("notes").text
+mappings = root.find("configuration").text
+
+print "BYU: XML FILE HEADER"
+
+iter = parent.getiterator()
+
+parent = root.find("socket")
+MYIP = parent.find("my_ip").text
+MYPORT = int(parent.find("my_port").text)
+
+if options.notes:
+    print "BYU: Notes = " + options.notes
+
+print "BYU: Mappings:" + mappings
+
+# Print IP information
+print "BYU: BYU IP/PORT (" + MYIP + ", " + str(MYPORT) + ")"
+#print "BYU: TELESCOPE IP/PORT (" + THEIRIP + ", " + str(THEIRPORT) + ")"
+
+if options.save_dir:
+    manager.params["out_dir"] = options.save_dir
+
+print "BYU: Starting Gulp..."
+print "BYU: Saving raw data files to " + manager.params["out_dir"]
+
+try:
+    os.makedirs(manager.params["out_dir"])
+except OSError as exception:
+    if exception.errno != errno.EEXIST:
+        raise
+    
+# Create Socket
+sock = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM)
+
+# Initialize the Socket
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+try:
+
+    sock.bind((MYIP, MYPORT))
+    sock.listen(1)
+
+    ps = subprocess.Popen("ps -C gulp", shell=True, stdout=subprocess.PIPE)
+    contents = ps.stdout.read()
+    ps.stdout.close()
+    ps.wait()
+    
+    if "gulp" in contents:
+        print "BYU: Gulp is already running. Please kill the process before continuing."
+        print contents
+        while "gulp" in contents:
+            ps = subprocess.Popen("ps -C gulp", shell=True, stdout=subprocess.PIPE)
+            contents = ps.stdout.read()
+            ps.stdout.close()
+            ps.wait()
+            time.sleep(0.2)
+
+    manager.start_gulp(manager.params["out_dir"])
+    print "BYU: Gulp is initialized!"
+
+    # Accept a socket connection
+    print "BYU: BYU ready for socket communication"
+    conn, address = sock.accept()
+    print "BYU: Connection made with " + str(address)
+
+    k = 1
+    prev_recv = ""
+    new_msg = ""
+
+    while True:
+        # Print status message
+        print "BYU: BYU ready for socket communication"
+	
+        # Receive message on socket
+        while True:
+            data = conn.recv(1024)
+            if data != b'':
+                print "Telescope->BYU: " + data
+                prev_recv = prev_recv + data
+                if "\n" in prev_recv:
+                    components = re.split("\n", prev_recv)
+                    # print components
+                    new_msg = components[0]
+                    prev_recv = components[1]
+                    break
+            else:
+                print "BYU: Broken socket, attempting to reconnect"
+                conn, address = sock.accept()
+                print "BYU: Socket connection restablished"
+                print "BYU: Connection made with " + str(address)
+
+        # Print message to terminal and log file
+        print "Telescope->BYU: " + new_msg
+    
+        # Parse message
+        output = parser.parse(new_msg, None, conn)
+        if output == None:
+            tags = re.split(" ", new_msg)
+            print "BYU->Telescope: " + tags[0].strip() + " does not match any socket message pattern"
+            sock.sendall(tags[0].strip() + " does not match any socket message pattern\n")
+        else:
+            manager.run_process(output, sock, conn)
+        
+        #conn.close()
+        time.sleep(0.5)
+         
+except KeyboardInterrupt:
+    sock.shutdown(socket.SHUT_RDWR)
+    time.sleep(1.0)
+    sock.close()
+    if manager != None:
+        if manager.gulp != None:
+            manager.end_gulp()
+    sys.exit()
