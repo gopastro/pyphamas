@@ -555,7 +555,7 @@ class manager:
         fp.write("%s\n" % self.source_name)
         fp.write("%s\n" % self.dmjd_start)
         if file_name == None:
-            scan_file_name = basetxt + "_%d.bin" % self.scan_number
+            file_name = basetxt + "_%d.bin" % self.scan_number
 
         r = -1;
         k = 1;
