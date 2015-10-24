@@ -544,7 +544,7 @@ class manager:
                      scan_file_name=None):
         ts = time.time()
         self.source_name = self.params["source_name"]
-        self.scan_number = self.params["scan_number"]
+        self.scan_number = int(self.params["scan_number"])
         self.dmjd_start = self.params["dmjd_start"]
         out_dir = self.params["out_dir"]
         basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
