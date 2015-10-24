@@ -1,0 +1,173 @@
+<Telescope>
+	<header>
+		<telescope>UMass Pixel Feed - Open Air</telescope>
+		<date>October 22, 2015</date>
+		<author>Gopal Narayanan</author>
+		<notes>UMass Integration Tests - ADC</notes>
+	</header>
+	<socket>
+		<my_ip>172.30.51.144</my_ip>
+		<my_port>6023</my_port>
+		<their_ip>172.30.51.144</their_ip>
+		<their_port>6000</their_port>
+		<send_error>1</send_error>
+	</socket>
+	<configuration>
+		ADC	Cable	Pixel
+		1	1	    2,1
+		2	2	    2,2
+		17	3	    2,3
+		18	4	    2,4
+		33	5	    2,5
+		34	6	    2,6
+		49	7	    2,7
+		50	8	    2,8
+		9	9	    3,1
+		10	10	    3,2
+		25	11	    3,3
+		26	12	    3,5
+		41	13	    3,7
+		42	14	    3,8
+		57	15	    NC
+		58	16	    NC
+		3	17	    4,1
+		4	18	    4,2
+		19	19	    4,3
+		20	20	    4,4
+		35	21	    NC
+		36	22	    NC
+		51	23	    4,5
+		52	24	    4,6
+		11	25	    4,7
+		12	26	    5,3
+		27	27	    5,7
+		28	28	    5,8
+		43	29	    6,2
+		44	30	    6,3
+		59	31	    6,5
+		60	32	    NC
+		5	33	    6,6
+		6	34	    6,7
+		21	35	    7,1
+		22	36	    7,2
+		37	37	    7,3
+		38	38	    7,4
+		53	39	    NC
+		54	40	    7,6
+		13	41	    7,7
+		14	42	    7,8
+		29	43	    8,1
+		30	44	    8,2
+		45	45	    NC
+		46	46	    NC
+		61	47	    NC
+		62	48	    NC
+		7	49	    NC
+		8	50	    NC
+		23	51	    NC
+		24	52	    NC
+		39	53	    NC
+		40	54	    NC
+		55	55	    NC
+		56	56	    NC
+		15	57	    NC
+		16	58	    NC
+		31	59	    NC
+		32	60	    NC
+		47	61	    NC
+		48	62	    NC
+		63	63	    NC
+		64	64	    NC
+	</configuration>
+	<msg_parse>
+		<msg name="INIT" ack="1" err="1" cmd="daq_start">
+			INIT
+                        <ack_format>init ok</ack_format>
+                        <err_format>init err %s</err_format>
+			<ack_timing>after</ack_timing>
+		</msg>
+		<msg name="SETUP" ack="1" err="1" cmd="daq_setup">
+			SETUP( [A-Z_]*=[A-Za-z.+0-9]+)*
+                        <ack_format>setup ok</ack_format>
+			<err_format>setup err %s</err_format>
+			<ack_timing>after</ack_timing>
+                	<param name="bin_start">BIN_START=(?#)[0-9]+(?#)</param>  
+	                <param name="bin_end">BIN_END=(?#)[0-9]+(?#)</param>
+        	        <param name="row_start">ROW_START=(?#)[0-9](?#)</param>
+                	<param name="row_end">ROW_END=(?#)[0-9](?#)</param>
+	                <param name="col_start">COL_START=(?#)[0-9](?#)</param>
+        	        <param name="col_end">COL_END=(?#)[0-9](?#)</param>
+                	<param name="lsb_select">LSB_SEL=(?#)[0-9]+(?#)</param>
+	    		<param name="num_secs">NUM_SECS=(?#)[0-9]+(.[0-9]+)?(?#)</param>
+			<param name="num_specs">NUM_SPECS=(?#)[0-9]+(?#)</param>
+		</msg>
+		<msg name="SPEC" ack="1" err="1" cmd="daq_spec">
+			SPEC( [0-9.])*
+			<ack_format>spec ok</ack_format>
+			<err_format>spec err %s</err_format>
+			<ack_timing>before</ack_timing>
+		</msg>
+		<msg name="SCAN" ack="1" err="1" cmd="daq_scan">
+			SCAN( [0-9.])*
+			<ack_format>scan ok</ack_format>
+			<err_format>scan err %s</err_format>
+			<ack_timing>before</ack_timing>
+		</msg>
+		<msg name="EXIT" ack="0" err="0" cmd="daq_end">
+			EXIT
+		</msg>
+		<msg name="GBTSCAN" ack="1" err="1" cmd="gbt_scan">
+		        GBTSCAN( [A-Z_]*=[A-Za-z.+0-9]+)*
+			<ack_format>setup ok</ack_format>
+			<err_format>setup err %s</err_format>
+			<ack_timing>after</ack_timing>
+                	<param name="source_name">SOURCE_NAME=(?#)[a-zA-Z\-]+(?#)</param>  
+	                <param name="dmjd_start">DMJD_START=(?#)[0-9]+(.[0-9]+)?(?#)</param>
+        	        <param name="scan_number">SCAN_NUMBER=(?#)[0-9]+(?#)</param>
+		</msg>
+	</msg_parse>
+	<res_manage>
+		<resources>
+			<roach name="roach1">169.254.145.11</roach>
+			<roach name="roach2">169.254.145.12</roach>
+			<roach name="roach3">169.254.145.13</roach>
+			<roach name="roach4">169.254.145.14</roach>
+		</resources>
+		<configuration>
+			<process name="daq">
+				<bitstream fft="256">x64daq256_slice_round.bof</bitstream>
+				<bitstream fft="512">x64daq512_slice_round.bof</bitstream>
+				<bitstream fft="1024">x64daq1024_slice_round2.bof</bitstream>
+				<roach>roach3</roach>
+                                <params>
+					<param name="bin_start">100</param>
+					<param name="bin_end">150</param>
+					<param name="row_start">0</param>
+					<param name="row_end">7</param>
+					<param name="col_start">0</param>
+					<param name="col_end">7</param>
+					<param name="fft_length">512</param>
+					<param name="lsb_select">7</param> <!-- was 7-->
+					<param name="num_secs">1</param>
+					<param name="num_specs">2000</param>
+                                </params>
+				<ip>10.0.0.31</ip>
+			</process>
+			<process name="bf">
+				<bitstream fft="512">bf_512.bof</bitstream>
+				<roach>roach3</roach>
+			</process>
+			<process name="x">
+				<bitstream fft="512">x_512.bof</bitstream>
+				<roachf>roach3</roachf>
+				<roachx>roach1</roachx>
+			</process>
+		</configuration>
+		<gulp>
+			<buffer>50000</buffer>
+			<out_dir>/media/Disk1/spec</out_dir>
+			<if>eth2</if>
+			<verbose>1</verbose>
+		</gulp>
+	</res_manage>
+</Telescope>

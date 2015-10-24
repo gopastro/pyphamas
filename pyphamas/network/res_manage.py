@@ -195,6 +195,9 @@ class manager:
         elif self.cmds[data[0]] == "daq_setup":
             self.run_daq_setup(data, server, sock)
 
+        elif self.cmds[data[0]] == "gbt_scan":
+            self.run_gbt_scan(data, server, sock)
+
         elif self.cmds[data[0]] == "daq_spec":
             self.run_daq_spec(data, server, sock)
 
@@ -534,6 +537,45 @@ class manager:
            file_name = base_file_name + str(t) + ".bin"
            self.run_daq_scan(data, server, sock, file_name)
     
+    '''
+    run_gbt_scan
+    '''
+    def run_gbt_scan(self, data, server, soc, file_name=None,
+                     scan_file_name=None):
+        ts = time.time()
+        self.source_name = self.params["source_name"]
+        self.scan_number = self.params["scan_number"]
+        self.dmjd_start = self.params["dmjd_start"]
+        out_dir = self.params["out_dir"]
+        basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
+        if scan_file_name == None:
+            scan_file_name = basetxt + "_%d.txt" % self.scan_number        
+        fp = open(os.path.join(out_dir, scan_file_name), 'w')
+        fp.write("%d\n" % self.scan_number)
+        fp.write("%s\n" % self.source_name)
+        fp.write("%s\n" % self.dmjd_start)
+        if file_name == None:
+            scan_file_name = basetxt + "_%d.bin" % self.scan_number
+
+        r = -1;
+        k = 1;
+        while r == -1:
+            print "BYU: Sending Gulp signal to start new file..."
+            if self.simulate == False:
+                os.killpg(self.gulp.pid, signal.SIGUSR1)
+            time.sleep(0.1)
+            print "BYU: Starting new file " + file_name
+            if self.simulate == False:
+                self.gulp.stdin.write(file_name + "\n")
+                    
+            r = self.start_capture(self.bin_start, self.bin_end,
+                                   self.row_start, self.row_end,
+                                   self.col_start, self.col_end,
+                                   self.seconds, self.fft_length, self.fpga, sock)
+
+            r = 1
+
+        
     '''
     run_daq_scan
     '''
