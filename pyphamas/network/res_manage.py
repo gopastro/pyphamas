@@ -554,6 +554,7 @@ class manager:
         fp.write("%d\n" % self.scan_number)
         fp.write("%s\n" % self.source_name)
         fp.write("%s\n" % self.dmjd_start)
+        fp.close()
         self.bin_start = int(self.params["bin_start"])
         self.bin_end = int(self.params["bin_end"])
         self.row_start = int(self.params["row_start"])
@@ -562,6 +563,8 @@ class manager:
         self.col_end = int(self.params["col_end"])
         self.seconds = float(self.params["num_secs"])
         self.lsb_select = int(self.params["lsb_select"])
+        print self.bin_start, self.bin_end, self.row_start, self.row_end
+        print self.col_start, self.col_end, , self.seconds, self.lsb_select
         if file_name == None:
             file_name = basetxt + "_%d.bin" % self.scan_number
 
