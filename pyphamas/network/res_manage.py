@@ -540,7 +540,7 @@ class manager:
     '''
     run_gbt_scan
     '''
-    def run_gbt_scan(self, data, server, soc, file_name=None,
+    def run_gbt_scan(self, data, server, sock, file_name=None,
                      scan_file_name=None):
         ts = time.time()
         self.source_name = self.params["source_name"]
@@ -564,7 +564,7 @@ class manager:
         self.seconds = float(self.params["num_secs"])
         self.lsb_select = int(self.params["lsb_select"])
         print self.bin_start, self.bin_end, self.row_start, self.row_end
-        print self.col_start, self.col_end, , self.seconds, self.lsb_select
+        print self.col_start, self.col_end, self.seconds, self.lsb_select
         if file_name == None:
             file_name = basetxt + "_%d.bin" % self.scan_number
 
