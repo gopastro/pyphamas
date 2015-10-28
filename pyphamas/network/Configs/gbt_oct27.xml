@@ -125,7 +125,7 @@
 	                <param name="dmjd_start">DMJD_START=(?#)DMJD_START=([0-9]+(.[0-9]+)?)(?#)</param>
         	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
 		</msg>
-		<msg name="GBTSCAN_STOP" ack="1" err="1" cmd="gbt_scan_stop">
+		<msg name="GBTSCAN_STOP" ack="0" err="0" cmd="gbt_scan_stop">
 		  GBTSCAN_STOP
 		</msg>
 	</msg_parse>
