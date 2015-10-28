@@ -155,6 +155,12 @@
 	    		<param name="bf_duration">NUM_SECS=(?#)NUM_SECS=([0-9]+(.[0-9]+)?)(?#)</param>
 			<param name="bf_sliceIdx">SLICE_IDX=(?#)SLICE_IDX=([0-9]+)(?#)</param>
 		</msg>
+		<msg name="BF_INIT" ack="1" err="1" cmd="bf_init">
+			BF_INIT
+			<ack_format>bf_init ok</ack_format>
+			<err_format>bf_init err %s</err_format>
+			<ack_timing>after</ack_timing>
+		</msg>
 	</msg_parse>
 	<res_manage>
 		<resources>
