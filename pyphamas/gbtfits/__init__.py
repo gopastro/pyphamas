@@ -1,1 +1,3 @@
-from gbtfits import GBTFITS
+from gbtfits import antfits
+from gbtfits import dcrfits
+from gbtfits import collate
