@@ -65,7 +65,7 @@ class manager:
                     temp = re.split("\(\?\#\)", child2.text)
                     regex2 = re.compile(temp[1])
                     self.cmd_params[msg_name][param_name] = [regex1, regex2]
-                
+                print "BYU: Parameters Available for %s: %s" % (msg_name, str(self.cmd_params[msg_name]))
                 # Save ack flags and ack message formats (if applicable)
                 if child.get("ack") != None:
                     if child.get("ack") == "1":
