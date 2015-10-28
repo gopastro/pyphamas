@@ -91,15 +91,15 @@
                         <ack_format>setup ok</ack_format>
 			<err_format>setup err %s</err_format>
 			<ack_timing>after</ack_timing>
-                	<param name="bin_start">BIN_START=(?#)[0-9]+(?#)</param>  
-	                <param name="bin_end">BIN_END=(?#)[0-9]+(?#)</param>
-        	        <param name="row_start">ROW_START=(?#)[0-9](?#)</param>
-                	<param name="row_end">ROW_END=(?#)[0-9](?#)</param>
-	                <param name="col_start">COL_START=(?#)[0-9](?#)</param>
-        	        <param name="col_end">COL_END=(?#)[0-9](?#)</param>
-                	<param name="lsb_select">LSB_SEL=(?#)[0-9]+(?#)</param>
-	    		<param name="num_secs">NUM_SECS=(?#)[0-9]+(.[0-9]+)?(?#)</param>
-			<param name="num_specs">NUM_SPECS=(?#)[0-9]+(?#)</param>
+                	<param name="bin_start">BIN_START=(?#)BIN_START=([0-9]+)(?#)</param>  
+	                <param name="bin_end">BIN_END=(?#)BIN_END=([0-9]+)(?#)</param>
+        	        <param name="row_start">ROW_START=(?#)ROW_START=([0-9])(?#)</param>
+                	<param name="row_end">ROW_END=(?#)ROW_END=([0-9])(?#)</param>
+	                <param name="col_start">COL_START=(?#)COL_START=([0-9])(?#)</param>
+        	        <param name="col_end">COL_END=(?#)COL_END=([0-9])(?#)</param>
+                	<param name="lsb_select">LSB_SEL=(?#)LSB_SEL=([0-9]+)(?#)</param>
+	    		<param name="num_secs">NUM_SECS=(?#)NUM_SECS=([0-9]+(.[0-9]+)?)(?#)</param>
+			<param name="num_specs">NUM_SPECS=(?#)NUM_SPEC=([0-9]+)(?#)</param>
 		</msg>
 		<msg name="SPEC" ack="1" err="1" cmd="daq_spec">
 			SPEC( [0-9.])*
@@ -121,9 +121,9 @@
 			<ack_format>setup ok</ack_format>
 			<err_format>setup err %s</err_format>
 			<ack_timing>after</ack_timing>
-                	<param name="source_name">SOURCE_NAME=(?#)[a-zA-Z0-9\-]+(?#)</param>  
-	                <param name="dmjd_start">DMJD_START=(?#)[0-9]+(.[0-9]+)?(?#)</param>
-        	        <param name="scan_number">SCAN_NUMBER=(?#)[0-9]+(?#)</param>
+                	<param name="source_name">SOURCE_NAME=(?#)SOURCE_NAME=([a-zA-Z0-9\-]+)(?#)</param>  
+	                <param name="dmjd_start">DMJD_START=(?#)DMJD_START=([0-9]+(.[0-9]+)?)(?#)</param>
+        	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
 		</msg>
 	</msg_parse>
 	<res_manage>

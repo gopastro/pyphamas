@@ -173,7 +173,7 @@ class manager:
             if a == None:
                 continue
             b = re.search(regex2, a.group(0))
-            new_param = b.group(0)
+            new_param = b.group(1)
             self.params[param_name] = new_param
             print "BYU: Parameter Change, " + param_name + " = " + new_param
 
