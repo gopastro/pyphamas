@@ -34,7 +34,7 @@ class manager:
         self.ack_formats = dict()
         self.ack_timings = dict()
         self.err_formats = dict()
-
+        self.scan_abort = False
         self.simulate = simulate
         tree = parse(config)
         elem = tree.getroot()
@@ -201,6 +201,9 @@ class manager:
 
         elif self.cmds[data[0]] == "gbt_scan":
             self.run_gbt_scan(data, server, sock)
+
+        elif self.cmds[data[0]] == "gbt_scan_stop":
+            self.run_gbt_scan_stop(data, server, sock)
 
         elif self.cmds[data[0]] == "daq_spec":
             self.run_daq_spec(data, server, sock)
@@ -485,7 +488,7 @@ class manager:
                 line = self.gulp.stderr.readline()
                 if "Waiting for new file..." in line:
                     break
-            while timer < seconds + 0.2:
+            while timer < seconds + 0.2 and not self.scan_abort:
                 start = time.time()
                 line = self.gulp.stderr.readline()
             
@@ -522,7 +525,18 @@ class manager:
                 end = time.time()
             
                 timer = timer + end - start
-            
+            if self.scan_abort:
+                # scan was aborted
+                print "BYU: Scan aborted"
+                diff = seconds + 0.2 - timer
+                print "BYU: Scan aborted %s seconds before being done" % diff
+                # close current file and start dummy file for remaining packets
+                print "BYU: Sending Gulp signal to start new file..."
+                os.killpg(self.gulp.pid, signal.SIGUSR1)
+                time.sleep(0.1)
+                dummy_file_name = "dummy.bin"
+                print "BYU: Starting new file " + dummy_file_name
+                self.gulp.stdin.write(file_name + "\n")                
             if flag != 0:
                 if flag == 1:
                     print "Gulp: packets dropped in kernel"
@@ -546,6 +560,10 @@ class manager:
     '''
     def run_gbt_scan(self, data, server, sock, file_name=None,
                      scan_file_name=None):
+        """
+        This command runs a GBT scan - that is determined
+        from GrailClient at the GBT
+        """
         ts = time.time()
         self.source_name = self.params["source_name"]
         self.scan_number = int(self.params["scan_number"])
@@ -569,7 +587,7 @@ class manager:
         self.lsb_select = int(self.params["lsb_select"])
         print self.bin_start, self.bin_end, self.row_start, self.row_end
         print self.col_start, self.col_end, self.seconds, self.lsb_select
-        if file_name == None:
+        if file_name is None:
             file_name = basetxt + "_%d.bin" % self.scan_number
 
         r = -1;
@@ -582,7 +600,11 @@ class manager:
             print "BYU: Starting new file " + file_name
             if self.simulate == False:
                 self.gulp.stdin.write(file_name + "\n")
-                    
+            
+            # Set scan_abort = False to start with 
+            # When GBTSCAN_STOP is received scan_abort
+            # is set to True and stops the scan in start_capture
+            self.scan_abort = False
             r = self.start_capture(self.bin_start, self.bin_end,
                                    self.row_start, self.row_end,
                                    self.col_start, self.col_end,
@@ -643,6 +665,13 @@ class manager:
         #        self.params["time"] = float(pair[1].strip())
         print "BYU: daq_setup command called"
 
+
+    """
+    run_gbt_scan_stop
+    """
+    def run_gbt_scan_stop(self, data, server, sock):
+        print "BYU: gbt_scan_stop command called"
+        self.scan_abort = True
 
     '''
     run_daq_end

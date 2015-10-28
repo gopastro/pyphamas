@@ -99,7 +99,7 @@
         	        <param name="col_end">COL_END=(?#)COL_END=([0-9])(?#)</param>
                 	<param name="lsb_select">LSB_SEL=(?#)LSB_SEL=([0-9]+)(?#)</param>
 	    		<param name="num_secs">NUM_SECS=(?#)NUM_SECS=([0-9]+(.[0-9]+)?)(?#)</param>
-			<param name="num_specs">NUM_SPECS=(?#)NUM_SPEC=([0-9]+)(?#)</param>
+			<param name="num_specs">NUM_SPECS=(?#)NUM_SPECS=([0-9]+)(?#)</param>
 		</msg>
 		<msg name="SPEC" ack="1" err="1" cmd="daq_spec">
 			SPEC( [0-9.])*
@@ -124,6 +124,9 @@
                 	<param name="source_name">SOURCE_NAME=(?#)SOURCE_NAME=([a-zA-Z0-9\-]+)(?#)</param>  
 	                <param name="dmjd_start">DMJD_START=(?#)DMJD_START=([0-9]+(.[0-9]+)?)(?#)</param>
         	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
+		</msg>
+		<msg name="GBTSCAN_STOP" ack="1" err="1" cmd="gbt_scan_stop">
+		  GBTSCAN_STOP
 		</msg>
 	</msg_parse>
 	<res_manage>
