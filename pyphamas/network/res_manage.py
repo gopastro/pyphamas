@@ -21,6 +21,7 @@ import subprocess
 import os
 import signal
 import re
+import BeamformerCtrl
 
 class manager:
     
@@ -226,10 +227,13 @@ class manager:
             # print "BYU->Telescope: " + self.err_formats[self.cur_msg_name] % "bf command is not implemented"
             # sock.sendall(self.err_formats[self.cur_msg_name] % "bf command is not implemented\n")
 
+        elif self.cmds[data[0]] == "bf_init":
+            self.run_bf_init(data, server, sock)
+
         elif self.cmds[data[0]] == "bf_coeff":
-            #self.run_bfcoeff(data, server, sock)
-            print "BYU->Telescope: " + self.err_formats[self.cur_msg_name] % "bf_coeff command is not implemented"
-            sock.sendall(self.err_formats[self.cur_msg_name] % "bf_coeff command is not implemented\n")
+            self.run_bfcoeff(data, server, sock)
+            # print "BYU->Telescope: " + self.err_formats[self.cur_msg_name] % "bf_coeff command is not implemented"
+            # sock.sendall(self.err_formats[self.cur_msg_name] % "bf_coeff command is not implemented\n")
 
         elif self.cmds[data[0]] == "spec":
             #self.run_spec(data, server, sock)
@@ -695,23 +699,39 @@ class manager:
     '''
     def run_bf(self, data, server, sock):
         print "BYU: Running BF...\n"
-	print self.params["beam1"]
-	print self.params["beam2"]
-	print self.params["beam3"]
-	print self.params["beam4"]
-	print self.params["beam5"]
-	print self.params["beam6"]
-	print self.params["beam7"]
-	print self.params["bf_dirName"]
-	print self.params["bf_accLen"]
-	print self.params["bf_duration"]
-	print self.params["bf_sliceIdx"]
+	weights = [self.params["beam1"],
+                   self.params["beam2"],
+                   self.params["beam3"],
+                   self.params["beam4"],
+                   self.params["beam5"],
+                   self.params["beam6"],
+                   self.params["beam7"]]
+	self.bf.runBeamformer(weights, # Beamformer weight filenames
+                              self.params["bf_dirName"],
+                              self.params["bf_duration"],
+                              self.params["bf_accLen"],
+                              self.params["bf_sliceIdx"],
+                              1)
         
+    '''
+    run_bf_init
+    '''
+    def run_bf_init(self, data, server, sock):
+        print "BYU: Initializing BF...\n"
+	self.bf = BeamformerCtrl.x64(self.bf_roach)
+
     '''
     run_bfcoeff
     '''
     def run_bfcoeff(self, data, server, sock):
-        sock.sendall("Running BF_Coeff...\n")
+        print "Running BF_Coeff...\n"
+	print "beam1 = " + self.params["beam1"]
+	print "beam2 = " + self.params["beam2"]
+	print "beam3 = " + self.params["beam3"]
+	print "beam4 = " + self.params["beam4"]
+	print "beam5 = " + self.params["beam5"]
+	print "beam6 = " + self.params["beam6"]
+	print "beam7 = " + self.params["beam7"]
         
     '''
     run_x
