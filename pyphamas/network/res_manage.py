@@ -148,6 +148,16 @@ class manager:
         for bits in bitstreams:
             self.bf_bits[bits.get("fft")] = bits.text
         
+	param_tag = process_tag.find("params")
+	params = param_tag.findall("param")
+	for child in params:
+		if child.get("name") == "bf_dirName" or child.get("name").startswith("beam"):
+			self.params[child.get("name")] = child.text
+		elif child.get("name") == "bf_accLen":
+			self.params[child.get("name")] = float(child.text)
+		else:
+			self.params[child.get("name")] = int(child.text)
+
         roach_tag = process_tag.find("roach")
         self.bf_roach = roach_tag.text
         
@@ -212,9 +222,9 @@ class manager:
             self.run_daq_end(data, server, sock)
 
         elif self.cmds[data[0]] == "bf":
-            #self.run_bf(data, server, sock)
-            print "BYU->Telescope: " + self.err_formats[self.cur_msg_name] % "bf command is not implemented"
-            sock.sendall(self.err_formats[self.cur_msg_name] % "bf command is not implemented\n")
+            self.run_bf(data, server, sock)
+            # print "BYU->Telescope: " + self.err_formats[self.cur_msg_name] % "bf command is not implemented"
+            # sock.sendall(self.err_formats[self.cur_msg_name] % "bf command is not implemented\n")
 
         elif self.cmds[data[0]] == "bf_coeff":
             #self.run_bfcoeff(data, server, sock)
@@ -684,7 +694,18 @@ class manager:
     run_bf
     '''
     def run_bf(self, data, server, sock):
-        sock.sendall("Running BF...\n")
+        print "BYU: Running BF...\n"
+	print self.params["beam1"]
+	print self.params["beam2"]
+	print self.params["beam3"]
+	print self.params["beam4"]
+	print self.params["beam5"]
+	print self.params["beam6"]
+	print self.params["beam7"]
+	print self.params["bf_dirName"]
+	print self.params["bf_accLen"]
+	print self.params["bf_duration"]
+	print self.params["bf_sliceIdx"]
         
     '''
     run_bfcoeff
