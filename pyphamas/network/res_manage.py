@@ -61,7 +61,8 @@ class manager:
                     param_name = child2.get("name").strip()
                     if param_name not in self.cmd_params[msg_name]:
                         self.cmd_params[msg_name][param_name] = []
-                    regex1 = re.compile(child2.text)
+                    #regex1 = re.compile(child2.text)
+                    regex1 = re.compile(msg_name)
                     temp = re.split("\(\?\#\)", child2.text)
                     regex2 = re.compile(temp[1])
                     self.cmd_params[msg_name][param_name] = [regex1, regex2]
@@ -172,7 +173,10 @@ class manager:
             a = re.search(regex1, data[1])
             if a == None:
                 continue
-            b = re.search(regex2, a.group(0))
+            #b = re.search(regex2, a.group(0))
+            b = re.search(regex2, data[1])
+            if b is None:
+                continue
             new_param = b.group(1)
             self.params[param_name] = new_param
             print "BYU: Parameter Change, " + param_name + " = " + new_param
