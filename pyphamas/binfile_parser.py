@@ -394,8 +394,8 @@ class BinFile(object):
             complexes = buff[packet_start:packet_start + self.packet_length:2] + \
                 1j*buff[packet_start+1:packet_start + self.packet_length:2]
             comp = complexes[self.I]
-            self.cross_corr += numpy.reshape(comp, (num_horns, 1, self.num_bins)) * \
-                numpy.reshape(comp.conj(), (1, num_horns, self.num_bins))
+            self.cross_corr += numpy.reshape(comp, (num_horns, 1, self.num_bins), order='F') * \
+                numpy.reshape(comp.conj(), (1, num_horns, self.num_bins), order='F')
             mean_data += comp
         mean_data = mean_data/float(number_packets)
         self.cross_corr = self.cross_corr/(number_packets-1) - ((float(number_packets)/float(number_packets-1.)) * numpy.reshape(mean_data, (num_horns, 1, self.num_bins)) * numpy.reshape(mean_data.conj(), (1, num_horns, self.num_bins)) )
