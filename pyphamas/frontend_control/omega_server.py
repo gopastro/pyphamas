@@ -9,13 +9,17 @@ class OmegaServer:
     Helper class for the Omega CYD208 Thermometer
     """
     def __init__(self, IP="172.23.1.68", 
-		 PORT=15, verbose=False):
+		 PORT=15, unit="K", verbose=False):
 	"""
 	Initializes telnet connection. Port 15 has been set up
 	with the right serial port parameters
 	"""
 	self.tn = telnetlib.Telnet(host=IP, port=PORT)
 	self.verbose = verbose
+	if self.verbose:
+	    print "Setting Unit to %s" % unit
+	self.unit = unit
+	self.tn.write('F0%s\r\n' % self.unit) # Sets temp. unit (K/C/F)
 	
     def parse_temperature(self, txt):
 	"Parses Omega text output into channel # and temp"
@@ -25,13 +29,14 @@ class OmegaServer:
 	dic[chantxt] = temptxt
 	return dic
     
-    def read_chan(self, chan, unit='K', settle=6):
+    def read_chan(self, chan, unit='K', settle=8):
 	"""
 	Reads temperature ('K','C','F') from given channel ('chan');
 	Meter settle time should be set to >= 6 seconds
 	"""
-	
-	self.tn.write('F0%s\r\n' %unit) # Sets temp. unit (K/C/F)
+	if self.unit != unit:
+	    self.tn.write('F0%s\r\n' %unit) # Sets temp. unit (K/C/F)
+	    time.sleep(5) # time to change units
 	self.tn.write('YC%s\r\n' %chan) # Sets channel number
 	time.sleep(settle) # Time needed for therm to settle
 	
