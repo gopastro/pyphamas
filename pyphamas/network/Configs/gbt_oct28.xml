@@ -1,0 +1,216 @@
+<Telescope>
+	<header>
+		<telescope>GBT Outdoor Test Facility</telescope>
+		<date>October 28, 2015</date>
+		<author>Richard Black</author>
+		<notes>First Light Outdoor Test Facility Test</notes>
+	</header>
+	<socket>
+		<my_ip>172.23.1.60</my_ip>
+		<my_port>6024</my_port>
+		<their_ip>172.23.1.60</their_ip>
+		<their_port>6000</their_port>
+		<send_error>1</send_error>
+	</socket>
+	<configuration>
+		ADC	IFCable	 Pixel FiberCable RXCard Notes
+		1	1	 2,1   Y1         1,1    X
+		2	2	 2,2   Y2         1,2    X
+		17	3	 2,3   Y3         1,3    X
+		18	4	 2,4   Y4         1,4    X
+		33	5	 2,5   Y5         2,1    X
+		34	6	 2,6   Y6         2,2    X
+		49	7	 2,7   Y7         2,3    X
+		50	8	 2,8   Y8         2,4    X
+		9	9	 3,1   Y9         3,1    X
+		10	10	 3,2   Y10        3,2    X
+		25	11	 3,3   Y11        3,3    X
+		26	12	 3,4   Y12        3,4    WeakPixel,0dBAttenBoard
+		41	13	 3,5   Y13        5,1    X
+		42	14	 3,7   Y14        5,3    X
+		57	NC	 NC    NC         NC     Bloom
+		58	NC	 NC    NC         NC     Bloom?
+		3	15	 3,8   Y15        5,4    X
+		4	16	 4,1   Y16        6,1    WeakPixel,0dBAttenBoard
+		19	17	 4,2   Y17        6,2    X
+		20	18	 4,3   Y18        6,3    X
+		35	NC	 NC    NC         NC     Bloom?
+		36	NC	 NC    NC         NC     Bloom
+		51	19	 4,4   Y19        6,4    X
+		52	20	 4,5   X1         7,1    X
+		11	21	 4,6   X2         7,2    X
+		12	22	 4,7   X3         7,3    WeakPixel,0dBAttenBoard
+		27	23	 5,3   X4         8,3    X
+		28	24	 5,7   X5         9,3    X
+		43	25	 5,8   X6         9,4    X
+		44	26	 6,2   X7         10,2   X
+		59	27	 6,4   X8         10,4   WeakPixel,0dBAttenBoard
+		60	NC	 NC    NC         NC     Bloom
+		5	28	 6,5   X9         12,1   WeakPixel,0dBAttenBoard
+		6	29	 6,6   X10        12,2   X
+		21	30	 6,7   X11        12,3   X
+		22	31	 6,8   X12        12,4   WeakPixel,0dBAttenBoard
+		37	32	 7,1   X13        13,1   X
+		38	33	 7,2   X14        13,2   X
+		53	NC	 NC    NC         NC     Bloom
+		54	34	 7,3   X15        13,3   X
+		13	35	 7,4   X16        13,4   X
+		14	36	 7,5   X17        14,1   WeakPixel,0dBAttenBoard
+		29	37	 7,7   X18        14,3   X
+		30	38	 7,8   X19        14,4   WeakPixel,0dBAttenBoard
+		45	39	 NC    NC         NC     Spare
+		46	40	 NC    NC         NC     1PPS
+		61	NC	 NC    NC         NC     X
+		62	NC	 NC    NC         NC     X
+		7	NC	 NC    NC         NC     X
+		8	NC	 NC    NC         NC     X
+		23	NC	 NC    NC         NC     X
+		24	NC	 NC    NC         NC     X
+		39	NC	 NC    NC         NC     X
+		40	NC	 NC    NC         NC     X
+		55	NC	 NC    NC         NC     X
+		56	NC	 NC    NC         NC     X
+		15	NC	 NC    NC         NC     X
+		16	NC	 NC    NC         NC     X
+		31	NC	 NC    NC         NC     X
+		32	NC	 NC    NC         NC     X
+		47	NC	 NC    NC         NC     X
+		48	NC	 NC    NC         NC     X
+		63	NC	 NC    NC         NC     X
+		64	NC	 NC    NC         NC     X
+	</configuration>
+	<msg_parse>
+		<msg name="INIT" ack="1" err="1" cmd="daq_start">
+			INIT
+                        <ack_format>init ok</ack_format>
+                        <err_format>init err %s</err_format>
+			<ack_timing>after</ack_timing>
+		</msg>
+		<msg name="SETUP" ack="1" err="1" cmd="daq_setup">
+			SETUP( [A-Z_]*=[A-Za-z.+0-9]+)*
+                        <ack_format>setup ok</ack_format>
+			<err_format>setup err %s</err_format>
+			<ack_timing>after</ack_timing>
+                	<param name="bin_start">BIN_START=(?#)BIN_START=([0-9]+)(?#)</param>  
+	                <param name="bin_end">BIN_END=(?#)BIN_END=([0-9]+)(?#)</param>
+        	        <param name="row_start">ROW_START=(?#)ROW_START=([0-9])(?#)</param>
+                	<param name="row_end">ROW_END=(?#)ROW_END=([0-9])(?#)</param>
+	                <param name="col_start">COL_START=(?#)COL_START=([0-9])(?#)</param>
+        	        <param name="col_end">COL_END=(?#)COL_END=([0-9])(?#)</param>
+                	<param name="lsb_select">LSB_SEL=(?#)LSB_SEL=([0-9]+)(?#)</param>
+	    		<param name="num_secs">NUM_SECS=(?#)NUM_SECS=([0-9]+(.[0-9]+)?)(?#)</param>
+			<param name="num_specs">NUM_SPECS=(?#)NUM_SPECS=([0-9]+)(?#)</param>
+		</msg>
+		<msg name="SPEC" ack="1" err="1" cmd="daq_spec">
+			SPEC( [0-9.])*
+			<ack_format>spec ok</ack_format>
+			<err_format>spec err %s</err_format>
+			<ack_timing>before</ack_timing>
+		</msg>
+		<msg name="SCAN" ack="1" err="1" cmd="daq_scan">
+			SCAN( [0-9.])*
+			<ack_format>scan ok</ack_format>
+			<err_format>scan err %s</err_format>
+			<ack_timing>before</ack_timing>
+		</msg>
+		<msg name="EXIT" ack="0" err="0" cmd="daq_end">
+			EXIT
+		</msg>
+		<msg name="GBTSCAN" ack="1" err="1" cmd="gbt_scan">
+		        GBTSCAN( [A-Z_]*=[A-Za-z.+0-9]+)*
+			<ack_format>setup ok</ack_format>
+			<err_format>setup err %s</err_format>
+			<ack_timing>after</ack_timing>
+                	<param name="source_name">SOURCE_NAME=(?#)SOURCE_NAME=([a-zA-Z0-9\-]+)(?#)</param>  
+	                <param name="dmjd_start">DMJD_START=(?#)DMJD_START=([0-9]+(.[0-9]+)?)(?#)</param>
+        	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
+		</msg>
+		<msg name="BF_COEFF" ack="1" err="1" cmd="bf_coeff">
+			BF_RUN( [A-Z_]*=[A-Za-z0-9\-._/]+)*
+			<ack_format>bf_coeff ok</ack_format>
+			<err_format>bf_coeff err %s</err_format>
+			<ack_timing>after</ack_timing>
+			<param name="beam1">BEAM1=(?#)BEAM1=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam2">BEAM2=(?#)BEAM2=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam3">BEAM3=(?#)BEAM3=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam4">BEAM4=(?#)BEAM4=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam5">BEAM5=(?#)BEAM5=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam6">BEAM6=(?#)BEAM6=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam7">BEAM7=(?#)BEAM7=([a-zA-Z0-9\-._/]+)(?#)</param>
+		</msg>
+		<msg name="BF_RUN" ack="1" err="1" cmd="bf">
+			BF_RUN( [A-Z_]*=[A-Za-z0-9\-._/]+)*
+			<ack_format>bf_run ok</ack_format>
+			<err_format>bf_run err %s</err_format>
+			<ack_timing>after</ack_timing>
+			<param name="beam1">BEAM1=(?#)BEAM1=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam2">BEAM2=(?#)BEAM2=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam3">BEAM3=(?#)BEAM3=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam4">BEAM4=(?#)BEAM4=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam5">BEAM5=(?#)BEAM5=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam6">BEAM6=(?#)BEAM6=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="beam7">BEAM7=(?#)BEAM7=([a-zA-Z0-9\-._/]+)(?#)</param>
+			<param name="bf_accLen">ACC_LEN=(?#)ACC_LEN=([0-9]+(.[0-9]+)?)(?#)</param>
+			<param name="bf_dirName">DIR_NAME=(?#)DIR_NAME=([a-zA-Z0-9\-._/]+)(?#)</param>
+	    		<param name="bf_duration">NUM_SECS=(?#)NUM_SECS=([0-9]+(.[0-9]+)?)(?#)</param>
+			<param name="bf_sliceIdx">SLICE_IDX=(?#)SLICE_IDX=([0-9]+)(?#)</param>
+		</msg>
+	</msg_parse>
+	<res_manage>
+		<resources>
+			<roach name="roach1">169.254.145.11</roach>
+			<roach name="roach2">169.254.145.12</roach>
+			<roach name="roach3">169.254.145.13</roach>
+			<roach name="roach4">169.254.145.14</roach>
+		</resources>
+		<configuration>
+			<process name="daq">
+				<bitstream fft="256">x64daq256_slice_round.bof</bitstream>
+				<bitstream fft="512">x64daq512_slice_round.bof</bitstream>
+				<bitstream fft="1024">x64daq1024_slice_round2.bof</bitstream>
+				<roach>roach3</roach>
+                                <params>
+					<param name="bin_start">100</param>
+					<param name="bin_end">150</param>
+					<param name="row_start">0</param>
+					<param name="row_end">7</param>
+					<param name="col_start">0</param>
+					<param name="col_end">7</param>
+					<param name="fft_length">512</param>
+					<param name="lsb_select">7</param> <!-- was 7-->
+					<param name="num_secs">1</param>
+					<param name="num_specs">2000</param>
+                                </params>
+				<ip>10.0.0.31</ip>
+			</process>
+			<process name="bf">
+				<bitstream fft="512">bf_512.bof</bitstream>
+				<roach>roach3</roach>
+				<params>
+					<param name="beam1">/root/weights/cable1</param>
+					<param name="beam2">/root/weights/cable2</param>
+					<param name="beam3">/root/weights/cable3</param>
+					<param name="beam4">/root/weights/cable4</param>
+					<param name="beam5">/root/weights/cable5</param>
+					<param name="beam6">/root/weights/cable6</param>
+					<param name="beam7">/root/weights/cable7</param>
+					<param name="bf_accLen">0.5</param>
+					<param name="bf_dirName">/media/Disk1/GBT_RTBF_OCT28</param>
+					<param name="bf_duration">60</param>
+					<param name="bf_sliceIdx">2</param>
+				</params>
+			</process>
+			<process name="x">
+				<bitstream fft="512">x_512.bof</bitstream>
+				<roachf>roach3</roachf>
+				<roachx>roach1</roachx>
+			</process>
+		</configuration>
+		<gulp>
+			<buffer>50000</buffer>
+			<out_dir>/media/Disk1/spec</out_dir>
+			<if>eth2</if>
+			<verbose>1</verbose>
+		</gulp>
+	</res_manage>
+</Telescope>
