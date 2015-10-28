@@ -38,6 +38,8 @@ class OmegaServer:
 	self.tn.write('WS\r\n') # Requests sample sensor reading
 	
 	txt = self.tn.read_some()
+	if self.verbose:
+	    print "Received text: %s" % txt
 	# txt = ''
 	# t = self.ser.read() # Arguments are delimitted by ','
 	# txt += t
