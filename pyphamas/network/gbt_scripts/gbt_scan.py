@@ -28,13 +28,23 @@ class GBTScan(object):
         scan. Likewise, 'Stopping' or 'Aborting' is a a good indicator
         that a scan is coming to an end.
         """
-        print "Device: %s. Parameter: %s" % (device, parameter)
+        if self.verbose:
+            print "Device: %s. Parameter: %s" % (device, parameter)
         stateval = value['state']['state']['value']
-        print "state:", stateval
+        if self.verbose:
+            print "state: %s" % stateval
         if stateval == 'Committed':
             print "Stateval changed to committed"
             print "Current Scan number is : %s" % self.SC.get_value('scanNumber')
-            #print "Current Scan number within cb is : %s" % device.get_value('scanNumber')
+            dmjd_start = self.get_mjd()
+            source_name = self.SC.get_value('source')
+            try:
+                scan_number = int(self.SC.get_value('scanNumber'))
+            except ValueError:
+                scan_number = 0
+            # need to get integration time correctly
+            self.start_gbt_scan(dmjd_start=dmjd_start, source_name=source_name,
+                                scan_number=scan_number)
         elif stateval == 'Stopping' or stateval == 'Aborting':
             print "Stopping with stateval : %s" % stateval
 
@@ -63,6 +73,17 @@ class GBTScan(object):
             self.SC.unreg_param('source', self.source_callback)
             self.auto_set = False        
         
+    def get_mjd(self):
+        """
+        Gets Modified Julian Date from
+        the startTime structure of ScanCoordinator
+        """
+        st = self.SC.get_parameter('startTime')
+        # integer number of seconds since midnight
+        secs = int(st['startTime']['startTime']['seconds']['value'])
+        return int(st['startTime']['startTime']['MJD']['value']) + \
+            (float(secs)/(24*3600.))
+                   
     def init_roach(self):
         self.sock.sendall('INIT\n')
         msg = self.sock.recv(128)

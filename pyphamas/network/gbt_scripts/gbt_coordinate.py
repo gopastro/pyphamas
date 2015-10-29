@@ -16,9 +16,7 @@ class GBTCoordinate(object):
         that a scan is coming to an end.
         """
         print "Received parameter", parameter, "from device", device
-        print device.get_value('source')
         print self.SC.get_value('source')
-        print device.get_value('startTime')
         print self.SC.get_value('startTime')
         stateval = value['state']['state']['value']
         print "state:", stateval
