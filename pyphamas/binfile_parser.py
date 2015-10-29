@@ -475,6 +475,43 @@ class BinFile(object):
         and reads the configuration object. Reads the configuration
         tag and reads the text in there and assigns actual receiver 
         elements to rows and columns from binary file
+        This one is for the 6 column newer format configuration options
+        """
+        if not os.path.exists(configfile):
+            raise Exception("Config file %s does not exist" % configfile)
+        tree = parse(configfile)
+        elem = tree.getroot()
+        cfg = elem.find("configuration")
+        txt = cfg.text
+        rows = txt.split('\n\t')
+        self.pixeldic = {} # for a given frontend pixel has
+                           # tuple of row, col of bf 
+        self.fiberdic = {} # for a given frontend pixel has
+                           # fiber receiver used
+        self.rxcarddic = {} # for a given frontend pixel has
+                            # mapping to rxdownconverter card used
+        for row in rows[2:-1]:
+            args = row.split()
+            adc = int(args[1])
+            cable = int(args[2])
+            pixel = args[3].strip()
+            fibercable = args[4].strip()
+            rxcard = args[5].strip()
+            print "ADC: %d, cable: %d, pixel: %s" % (adc, cable, pixel)
+            if pixel != 'NC':
+                self.pixeldic[pixel] = get_rowcol_for_cable(cable)
+                self.fiberdic[pixel] = fibercable
+                self.rxcarddic[pixel] = rxcard
+        self.pixel_label = dict((v, k) for k, v in self.pixeldic.iteritems())
+
+
+    def read_xml_config_old(self, configfile):
+        """
+        Reads the XML configuration file used in data taking
+        and reads the configuration object. Reads the configuration
+        tag and reads the text in there and assigns actual receiver 
+        elements to rows and columns from binary file
+        This one is for the old 3 column configuration we used to have
         """
         if not os.path.exists(configfile):
             raise Exception("Config file %s does not exist" % configfile)
