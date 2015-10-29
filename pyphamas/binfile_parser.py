@@ -493,7 +493,10 @@ class BinFile(object):
         for row in rows[2:-1]:
             args = row.split()
             adc = int(args[1])
-            cable = int(args[2])
+            try:
+                cable = int(args[2])
+            except ValueError:
+                cable = -1
             pixel = args[3].strip()
             fibercable = args[4].strip()
             rxcard = args[5].strip()
