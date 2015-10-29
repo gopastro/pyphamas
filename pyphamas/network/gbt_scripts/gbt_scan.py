@@ -70,10 +70,22 @@ class GBTScan(object):
     def close_x64(self):
         self.sock.close()
 
+    def x64_send_with_ack(self, text):
+        self.sock.sendall(text)
+        msg = self.sock.recv(128)
+        if self.verbose:
+            print msg
+
     def start_gbt_scan(self, bin_start=98, bin_end=160,
-                       col_start=0, col_start=5,
+                       col_start=0, col_end=5,
                        row_start=0, row_end=7,
                        num_secs=1.0, lsb_sel=8,
                        source_name='', scan_number=1,
                        dmjd_start=None):
-        pass
+        # do setup parameters first
+        self.x64_send_with_ack("SETUP BIN_START=%d BIN_END=%d\n" % (bin_start, bin_end))
+        self.x64_send_with_ack("SETUP COL_START=%d COL_END=%d\n" % (col_start, col_end))
+        self.x64_send_with_ack("SETUP ROW_START=%d ROW_END=%d\n" % (row_start, row_end))
+        self.x64_send_with_ack("SETUP NUM_SECS=%g LSB_SEL=%d\n" % (num_secs, lsb_sel))
+        self.x64_send_with_ack("GBTSCAN SOURCE_NAME=%s SCAN_NUMBER=%d DMJD_START=%s\n" % (source_name, scan_number, dmjd_start))
+        
