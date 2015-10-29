@@ -28,12 +28,13 @@ class GBTScan(object):
         scan. Likewise, 'Stopping' or 'Aborting' is a a good indicator
         that a scan is coming to an end.
         """
+        print "Device: %s. Parameter: %s" % (device, parameter)
         stateval = value['state']['state']['value']
         print "state:", stateval
         if stateval == 'Committed':
             print "Stateval changed to committed"
             print "Current Scan number is : %s" % self.SC.get_value('scanNumber')
-            print "Current Scan number within cbis : %s" % device.get_value('scanNumber')
+            #print "Current Scan number within cb is : %s" % device.get_value('scanNumber')
         elif stateval == 'Stopping' or stateval == 'Aborting':
             print "Stopping with stateval : %s" % stateval
 
