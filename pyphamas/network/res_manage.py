@@ -584,6 +584,7 @@ class manager:
         self.dmjd_start = self.params["dmjd_start"]
         self.project_id = self.params["project_id"]
         self.receiver = self.params["receiver"]
+        self.scan_length = self.params["scan_length"]
         out_dir = self.params["out_dir"]
         basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
         if scan_file_name == None:
@@ -594,6 +595,7 @@ class manager:
         fp.write("dmjd_start,%s\n" % self.dmjd_start)
         fp.write("project_id,%s\n" % self.project_id)
         fp.write("receiver,%s\n" % self.receiver)
+        fp.write("scan_length,%s\n" % self.scan_length)
         fp.close()
         self.bin_start = int(self.params["bin_start"])
         self.bin_end = int(self.params["bin_end"])
@@ -601,7 +603,9 @@ class manager:
         self.row_end = int(self.params["row_end"])
         self.col_start = int(self.params["col_start"])
         self.col_end = int(self.params["col_end"])
-        self.seconds = float(self.params["num_secs"])
+        if self.scan_length is not None and self.scan_length != 0.0:
+            self.seconds = float(self.params["scan_length"])
+        #self.seconds = float(self.params["num_secs"])
         self.lsb_select = int(self.params["lsb_select"])
         print self.bin_start, self.bin_end, self.row_start, self.row_end
         print self.col_start, self.col_end, self.seconds, self.lsb_select

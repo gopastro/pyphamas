@@ -126,6 +126,7 @@
         	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
 			<param name="project_id">PROJECT_ID=(?#)PROJECT_ID=([a-zA-Z0-9\_\-]+)(?#)</param>
 			<param name="receiver">RECEIVER=(?#)RECEIVER=([a-zA-Z0-9\_\-]+)(?#)</param>
+			<param name="scan_length">SCAN_LENGTH=(?#)SCAN_LENGTH=([0-9]+(.[0-9]+)?)(?#)</param>
 		</msg>
 		<msg name="BF_COEFF" ack="1" err="1" cmd="bf_coeff">
 			BF_COEFF( [A-Z_]*=[A-Za-z0-9\-._/]+)*
