@@ -582,14 +582,18 @@ class manager:
         self.source_name = self.params["source_name"]
         self.scan_number = int(self.params["scan_number"])
         self.dmjd_start = self.params["dmjd_start"]
+        self.project_id = self.params["project_id"]
+        self.receiver = self.params["receiver"]
         out_dir = self.params["out_dir"]
         basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
         if scan_file_name == None:
             scan_file_name = basetxt + "_%d.txt" % self.scan_number        
         fp = open(os.path.join(out_dir, scan_file_name), 'w')
-        fp.write("%d\n" % self.scan_number)
-        fp.write("%s\n" % self.source_name)
-        fp.write("%s\n" % self.dmjd_start)
+        fp.write("scan_number,%d\n" % self.scan_number)
+        fp.write("source_name,%s\n" % self.source_name)
+        fp.write("dmjd_start,%s\n" % self.dmjd_start)
+        fp.write("project_id,%s\n" % self.project_id)
+        fp.write("receiver,%s\n" % self.receiver)
         fp.close()
         self.bin_start = int(self.params["bin_start"])
         self.bin_end = int(self.params["bin_end"])

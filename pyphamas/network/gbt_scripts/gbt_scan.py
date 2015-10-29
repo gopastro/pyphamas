@@ -5,7 +5,7 @@ from gbt.ygor import GrailClient, getConfigValue
 class GBTScan(object):
     def __init__(self, x64IP="172.23.1.60", x64port=6023,
                  grailhost="toe", grailport=18000, 
-                 verbose=True):
+                 verbose=True, testmode=False):
         self.verbose = verbose
         self.grailhost = getConfigValue(grailhost, 'GrailHost')
         if self.verbose:
@@ -15,6 +15,7 @@ class GBTScan(object):
         self.auto_set = False
         self.x64IP = x64IP
         self.x64port = x64port
+        self.testmode = testmode
         self.connect_x64()
 
     def connect_x64(self):
@@ -43,8 +44,17 @@ class GBTScan(object):
             except ValueError:
                 scan_number = 0
             # need to get integration time correctly
+            num_secs = self.get_scanLength()
+            if self.testmode:
+                if num_secs > 1.0:
+                    num_secs = 1.0 # cap at 1 seconds for test mode to prevent large files
+            project_id = self.SC.get_value('projectId')
+            receiver = self.SC.get_value('receiver')
             self.start_gbt_scan(dmjd_start=dmjd_start, source_name=source_name,
-                                scan_number=scan_number)
+                                num_secs=num_secs,
+                                scan_number=scan_number,
+                                project_id=project_id,
+                                receiver=receiver)
         elif stateval == 'Stopping' or stateval == 'Aborting':
             print "Stopping with stateval : %s" % stateval
 
@@ -83,13 +93,24 @@ class GBTScan(object):
         secs = int(st['startTime']['startTime']['seconds']['value'])
         return int(st['startTime']['startTime']['MJD']['value']) + \
             (float(secs)/(24*3600.))
+
+    def get_scanLength(self):
+        sl = self.SC.get_parameter('scanLength')
+        # floating point seconds of integration
+        try:
+            secs = float(sl['scanLength']['scanLength']['seconds']['value'])
+        except ValueError:
+            secs = 1.0 # some sane default
+        return secs
                    
     def init_roach(self):
         self.sock.sendall('INIT\n')
         msg = self.sock.recv(128)
         if self.verbose:
             print msg
-
+        if msg == "init ok":
+            print "Roach successfully initialized"
+            
     def close_x64(self):
         self.sock.close()
 
@@ -104,11 +125,12 @@ class GBTScan(object):
                        row_start=0, row_end=7,
                        num_secs=1.0, lsb_sel=8,
                        source_name='', scan_number=1,
-                       dmjd_start=None):
+                       dmjd_start=None, project_id="",
+                       receiver=""):
         # do setup parameters first
         self.x64_send_with_ack("SETUP BIN_START=%d BIN_END=%d\n" % (bin_start, bin_end))
         self.x64_send_with_ack("SETUP COL_START=%d COL_END=%d\n" % (col_start, col_end))
         self.x64_send_with_ack("SETUP ROW_START=%d ROW_END=%d\n" % (row_start, row_end))
         self.x64_send_with_ack("SETUP NUM_SECS=%g LSB_SEL=%d\n" % (num_secs, lsb_sel))
-        self.x64_send_with_ack("GBTSCAN SOURCE_NAME=%s SCAN_NUMBER=%d DMJD_START=%s\n" % (source_name, scan_number, dmjd_start))
+        self.x64_send_with_ack("GBTSCAN SOURCE_NAME=%s SCAN_NUMBER=%d DMJD_START=%s PROJECT_ID=%s RECEIVER=%s\n" % (source_name, scan_number, dmjd_start, project_id, receiver))
         
