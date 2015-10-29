@@ -132,5 +132,5 @@ class GBTScan(object):
         self.x64_send_with_ack("SETUP COL_START=%d COL_END=%d\n" % (col_start, col_end))
         self.x64_send_with_ack("SETUP ROW_START=%d ROW_END=%d\n" % (row_start, row_end))
         self.x64_send_with_ack("SETUP NUM_SECS=%g LSB_SEL=%d\n" % (num_secs, lsb_sel))
-        self.x64_send_with_ack("GBTSCAN SOURCE_NAME=%s SCAN_NUMBER=%d DMJD_START=%s PROJECT_ID=%s RECEIVER=%s\n" % (source_name, scan_number, dmjd_start, project_id, receiver))
+        self.x64_send_with_ack("GBTSCAN SOURCE_NAME=%s SCAN_NUMBER=%d DMJD_START=%s PROJECT_ID=%s RECEIVER=%s SCAN_LENGTH=%s\n" % (source_name, scan_number, dmjd_start, project_id, receiver, num_secs))
         
