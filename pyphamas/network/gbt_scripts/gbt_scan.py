@@ -21,27 +21,28 @@ class GBTScan(object):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.x64IP, self.x64port))
 
-    def state_callback(self, a, b, c):
+    def state_callback(self, device, parameter, value):
         """This is called whenever scans are run on the GBT telescope. The GBT
         M&C system states transition to "Running" via "Comitted." This is
         thus a good state to look for to catch the system about to start a
         scan. Likewise, 'Stopping' or 'Aborting' is a a good indicator
         that a scan is coming to an end.
         """
-        stateval = c['state']['state']['value']
+        stateval = value['state']['state']['value']
         print "state:", stateval
         if stateval == 'Committed':
             print "Stateval changed to committed"
             print "Current Scan number is : %s" % self.SC.get_value('scanNumber')
+            print "Current Scan number within cbis : %s" % device.get_value('scanNumber')
         elif stateval == 'Stopping' or stateval == 'Aborting':
             print "Stopping with stateval : %s" % stateval
 
-    def source_callback(self, a, b, c):
+    def source_callback(self, device, parameter, value):
         """
         This is called whenever the observer sets the 'source' parameter
         """
-        if b == 'source':
-            print "Source changed to: %s" % c['source']['source']['value']        
+        if parameter == 'source':
+            print "Source changed to: %s" % value['source']['source']['value']        
 
     def set_auto(self):
         """
