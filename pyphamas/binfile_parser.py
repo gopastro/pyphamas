@@ -492,14 +492,14 @@ class BinFile(object):
                             # mapping to rxdownconverter card used
         for row in rows[2:-1]:
             args = row.split()
-            adc = int(args[1])
+            adc = int(args[0])
             try:
-                cable = int(args[2])
+                cable = int(args[1])
             except ValueError:
                 cable = -1
-            pixel = args[3].strip()
-            fibercable = args[4].strip()
-            rxcard = args[5].strip()
+            pixel = args[2].strip()
+            fibercable = args[3].strip()
+            rxcard = args[4].strip()
             print "ADC: %d, cable: %d, pixel: %s" % (adc, cable, pixel)
             if pixel != 'NC':
                 self.pixeldic[pixel] = get_rowcol_for_cable(cable)
