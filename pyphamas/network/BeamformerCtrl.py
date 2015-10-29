@@ -400,8 +400,8 @@ class x64():
         elif seconds < 0.00002:
             raise ValueError('Invalid acc_len value. Must be greater than .00002')
         else:
-            if seconds > 30:
-                print "Warning: an acc_len value this large may cause overflow issues!"
+            if seconds > 30.0:
+                print "Warning: an acc_len value this large may cause overflow issues! " + seconds
             acclen = math.floor(seconds * 50000000/512);
 
         self.u.write_int('acc_len', acclen);
@@ -598,7 +598,8 @@ class x64():
         dirName = os.path.abspath(os.path.expanduser(dirName))
         now = datetime.datetime.now()
         date = now.strftime('%Y_%b_%d')           #'%s_%s_%s'%(now.month, now.day, now.year)
-        directories = glob.glob('%s_%s_*/'%(dirName, date))
+	directories = glob.glob(dirName + "_*") # Modified for simpler socket integration, RB Oct 28 2015
+        # directories = glob.glob('%s_%s_*/'%(dirName, date))
         newIdx = 1
 
         #get last numbertag in directories
@@ -619,7 +620,7 @@ class x64():
     
        # print 'maxval = %i'%(maxval)
       #  print 'newIdx = %i'%(newIdx)
-        directory = '%s_%s_%i'%(dirName, date, newIdx)
+        directory = '%s_%i'%(dirName, newIdx)
 
         if os.path.exists(directory):
             #shouldn't get here ever
@@ -879,14 +880,14 @@ class x64():
         print 'Directory created. \n\tPath: %s\n'%(directory)
         
         print 'Time until ready: ' + str(time.time() - tic)
-        proceed = raw_input('Start MATLAB plotting function <plotBFData(dirPath, numFiles)>\n'
-                  '\tUse directory path as above\n'
-                  '\nContinue (y/n)? ').lower()
-        if proceed == 'n':
-            print ('\nNote: Beamformers are still running, but no data will be saved\n'
-                   'Exiting. . . \n')
-        else:
-            self.startContReadSave(directory, duration, period)
+        #proceed = raw_input('Start MATLAB plotting function <plotBFData(dirPath, numFiles)>\n'
+        #          '\tUse directory path as above\n'
+        #          '\nContinue (y/n)? ').lower()
+        #if proceed == 'n':
+        #    print ('\nNote: Beamformers are still running, but no data will be saved\n'
+        #           'Exiting. . . \n')
+        #else:
+        self.startContReadSave(directory, duration, period)
 
 
 #-------------------------------------------------------------------------------------------

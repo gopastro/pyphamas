@@ -7,7 +7,7 @@
 	</header>
 	<socket>
 		<my_ip>172.23.1.60</my_ip>
-		<my_port>6024</my_port>
+		<my_port>6027</my_port>
 		<their_ip>172.23.1.60</their_ip>
 		<their_port>6000</their_port>
 		<send_error>1</send_error>
@@ -126,7 +126,7 @@
         	        <param name="scan_number">SCAN_NUMBER=(?#)SCAN_NUMBER=([0-9]+)(?#)</param>
 		</msg>
 		<msg name="BF_COEFF" ack="1" err="1" cmd="bf_coeff">
-			BF_RUN( [A-Z_]*=[A-Za-z0-9\-._/]+)*
+			BF_COEFF( [A-Z_]*=[A-Za-z0-9\-._/]+)*
 			<ack_format>bf_coeff ok</ack_format>
 			<err_format>bf_coeff err %s</err_format>
 			<ack_timing>after</ack_timing>

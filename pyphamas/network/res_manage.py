@@ -708,9 +708,9 @@ class manager:
                    self.params["beam7"]]
 	self.bf.runBeamformer(weights, # Beamformer weight filenames
                               self.params["bf_dirName"],
-                              self.params["bf_duration"],
-                              self.params["bf_accLen"],
-                              self.params["bf_sliceIdx"],
+                              float(self.params["bf_duration"]),
+                              float(self.params["bf_accLen"]),
+                              int(self.params["bf_sliceIdx"]),
                               1)
         
     '''
