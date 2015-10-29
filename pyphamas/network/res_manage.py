@@ -603,9 +603,9 @@ class manager:
         self.row_end = int(self.params["row_end"])
         self.col_start = int(self.params["col_start"])
         self.col_end = int(self.params["col_end"])
-        if self.scan_length is not None and self.scan_length != 0.0:
-            self.seconds = float(self.params["scan_length"])
-        #self.seconds = float(self.params["num_secs"])
+        #if self.scan_length is not None and self.scan_length != 0.0:
+        #    self.seconds = float(self.params["scan_length"])
+        self.seconds = float(self.params["num_secs"])
         self.lsb_select = int(self.params["lsb_select"])
         print self.bin_start, self.bin_end, self.row_start, self.row_end
         print self.col_start, self.col_end, self.seconds, self.lsb_select
