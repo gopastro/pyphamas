@@ -550,7 +550,7 @@ class manager:
                 time.sleep(0.1)
                 dummy_file_name = "dummy.bin"
                 print "BYU: Starting new file " + dummy_file_name
-                self.gulp.stdin.write(file_name + "\n")                
+                self.gulp.stdin.write(dummy_file_name + "\n")                
             if flag != 0:
                 if flag == 1:
                     print "Gulp: packets dropped in kernel"
