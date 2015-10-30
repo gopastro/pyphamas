@@ -11,8 +11,8 @@ from matplotlib.pyplot import setp
 #logger.name = __name__
 from plots import MainView, BasePlotView, ChartView, ChartProperties
 import matplotlib
+from mpldatacursor import datacursor, HighlightingDataCursor
 if matplotlib.__version__ >= '1.0':
-    from mpldatacursor import datacursor, HighlightingDataCursor
     MATPLOTLIBV1_0 = True
 else:
     MATPLOTLIBV1_0 = False
