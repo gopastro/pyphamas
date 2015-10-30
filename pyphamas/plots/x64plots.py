@@ -433,22 +433,22 @@ class X64PlotBase:
             legline.set_picker(5)  # 5 pts tolerance
             lined[legline] = origline        
         
-        def onpick(event):
-            # on the pick event, find the orig line corresponding to the
-            # legend proxy line, and toggle the visibility
-            legline = event.artist
-            origline = lined[legline]
-            vis = not origline.get_visible()
-            origline.set_visible(vis)
-            # Change the alpha on the line in the legend so we can see what lines
-            # have been toggled
-            if vis:
-                legline.set_alpha(1.0)
-            else:
-                legline.set_alpha(0.2)
-            self.plotobj.f.canvas.draw()
+        # def onpick(event):
+        #     # on the pick event, find the orig line corresponding to the
+        #     # legend proxy line, and toggle the visibility
+        #     legline = event.artist
+        #     origline = lined[legline]
+        #     vis = not origline.get_visible()
+        #     origline.set_visible(vis)
+        #     # Change the alpha on the line in the legend so we can see what lines
+        #     # have been toggled
+        #     if vis:
+        #         legline.set_alpha(1.0)
+        #     else:
+        #         legline.set_alpha(0.2)
+        #     self.plotobj.f.canvas.draw()
         
-        self.plotobj.f.canvas.mpl_connect('pick_event', onpick)
+        # self.plotobj.f.canvas.mpl_connect('pick_event', onpick)
         if MATPLOTLIBV1_0:
             HighlightingDataCursor(self.lines)
         else:
