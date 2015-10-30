@@ -15,7 +15,7 @@ if matplotlib.__version__ >= '1.0':
     from mpldatacursor import datacursor, HighlightingDataCursor
     MATPLOTLIBV1_0 = True
 else:
-    from mpldatacursor.datacursor_pre1 import DataCursor as SimpleDataCursor
+    from .datacursor_pre1 import DataCursor as SimpleDataCursor
     MATPLOTLIBV1_0 = False
 #from dreampy.observing.locations import location, LMT, GBT, Amherst
 
