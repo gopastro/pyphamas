@@ -29,7 +29,10 @@ from matplotlib import offsetbox
 import matplotlib
 from matplotlib.contour import ContourSet
 from matplotlib.image import AxesImage
-from matplotlib.collections import PathCollection, LineCollection
+import matplotlib
+if matplotlib.__version__ >= '1.0':
+    from matplotlib.collections import PathCollection
+from matplotlib.collections import LineCollection
 from matplotlib.collections import PatchCollection, PolyCollection, QuadMesh
 from matplotlib.container import Container
 from matplotlib.lines import Line2D
@@ -305,7 +308,8 @@ class DataCursor(object):
         """Get a dict of info for the artist selected by "event"."""
         def default_func(event):
             return {}
-        registry = {
+        if matplotlib.__version__ >= '1.0':
+            registry = {
                 AxesImage : [pick_info.image_props],
                 PathCollection : [pick_info.scatter_props, self._contour_info,
                                   pick_info.collection_props],
@@ -319,6 +323,21 @@ class DataCursor(object):
                 QuadMesh : [pick_info.collection_props],
                 Rectangle : [pick_info.rectangle_props],
                 }
+        else:
+            registry = {
+                AxesImage : [pick_info.image_props],
+                PathCollection : [pick_info.scatter_props, self._contour_info,
+                                  pick_info.collection_props],
+                Line2D : [pick_info.line_props],
+                LineCollection : [pick_info.collection_props,
+                                  self._contour_info],
+                PatchCollection : [pick_info.collection_props,
+                                   self._contour_info],
+                PolyCollection : [pick_info.collection_props,
+                                  pick_info.scatter_props],
+                QuadMesh : [pick_info.collection_props],
+                Rectangle : [pick_info.rectangle_props],
+                }            
         x, y = event.mouseevent.xdata, event.mouseevent.ydata
         props = dict(x=x, y=y, label=event.artist.get_label(), event=event)
         props['ind'] = getattr(event, 'ind', None)

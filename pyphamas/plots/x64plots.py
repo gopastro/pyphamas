@@ -397,8 +397,8 @@ class X64PlotBase:
                           self.bf.spec[row, col, :], linestyle='steps-mid',
                           label=label)
         self.lines.append(line)
-        if MATPLOTLIBV1_0:
-            HighlightingDataCursor(self.lines)
+        #if MATPLOTLIBV1_0:
+        HighlightingDataCursor(self.lines)
         self.set_subplot_title("%s" % self.bf.basename)
         self.set_legend(loc='best')
 
@@ -446,8 +446,8 @@ class X64PlotBase:
             self.plotobj.f.canvas.draw()
         
         self.plotobj.f.canvas.mpl_connect('pick_event', onpick)
-        if MATPLOTLIBV1_0:
-            HighlightingDataCursor(self.lines)
+        #if MATPLOTLIBV1_0:
+        HighlightingDataCursor(self.lines)
 
     def implot_data(self, bf, data_type='amp',
                     vmin=None, vmax=None,
@@ -478,10 +478,10 @@ class X64PlotBase:
                                      vmin=vmin, vmax=vmax,
                                      **kwargs)            
         ax, kw = self.plotobj._get_current_axes()
-        if MATPLOTLIBV1_0:
-            datacursor(self.image, display='single',bbox=dict(fc='white'),
-                       arrowprops=dict(arrowstyle='simple', fc='white', alpha=0.5),
-                       formatter="x: {x:.0f}\ny: {y:.0f}\nz: {z:.2f}".format)
+        #if MATPLOTLIBV1_0:
+        datacursor(self.image, display='single',bbox=dict(fc='white'),
+                   arrowprops=dict(arrowstyle='simple', fc='white', alpha=0.5),
+                   formatter="x: {x:.0f}\ny: {y:.0f}\nz: {z:.2f}".format)
         def format_coord(x, y):
             if data_type == 'amp':
                 z = (10*numpy.log10(numpy.abs(self.bf.cc)))[x, y]
@@ -537,8 +537,8 @@ class X64PlotBase:
         else:
             label="Row%d, Col%d" % (self.bf.row_start+row, self.bf.col_start+col)
         self.hist(h, bins=20, label=label)
-        if MATPLOTLIBV1_0:
-            datacursor()
+        #if MATPLOTLIBV1_0:
+        datacursor()
         self.set_subplot_title("%s" % self.bf.basename)
         if plot_sigma:
             y1, y2 = self.get_ylims()
