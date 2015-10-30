@@ -11,8 +11,8 @@ from matplotlib.pyplot import setp
 #logger.name = __name__
 from plots import MainView, BasePlotView, ChartView, ChartProperties
 import matplotlib
-from mpldatacursor import datacursor, HighlightingDataCursor
 if matplotlib.__version__ >= '1.0':
+    from mpldatacursor import datacursor, HighlightingDataCursor
     MATPLOTLIBV1_0 = True
 else:
     MATPLOTLIBV1_0 = False
@@ -397,8 +397,8 @@ class X64PlotBase:
                           self.bf.spec[row, col, :], linestyle='steps-mid',
                           label=label)
         self.lines.append(line)
-        #if MATPLOTLIBV1_0:
-        HighlightingDataCursor(self.lines)
+        if MATPLOTLIBV1_0:
+            HighlightingDataCursor(self.lines)
         self.set_subplot_title("%s" % self.bf.basename)
         self.set_legend(loc='best')
 
@@ -446,8 +446,8 @@ class X64PlotBase:
             self.plotobj.f.canvas.draw()
         
         self.plotobj.f.canvas.mpl_connect('pick_event', onpick)
-        #if MATPLOTLIBV1_0:
-        HighlightingDataCursor(self.lines)
+        if MATPLOTLIBV1_0:
+            HighlightingDataCursor(self.lines)
 
     def implot_data(self, bf, data_type='amp',
                     vmin=None, vmax=None,
@@ -537,8 +537,8 @@ class X64PlotBase:
         else:
             label="Row%d, Col%d" % (self.bf.row_start+row, self.bf.col_start+col)
         self.hist(h, bins=20, label=label)
-        #if MATPLOTLIBV1_0:
-        datacursor()
+        if MATPLOTLIBV1_0:
+            datacursor()
         self.set_subplot_title("%s" % self.bf.basename)
         if plot_sigma:
             y1, y2 = self.get_ylims()
