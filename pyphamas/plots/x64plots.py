@@ -15,6 +15,7 @@ if matplotlib.__version__ >= '1.0':
     from mpldatacursor import datacursor, HighlightingDataCursor
     MATPLOTLIBV1_0 = True
 else:
+    from mpldatacursor.datacursor_pre1 import DataCursor as SimpleDataCursor
     MATPLOTLIBV1_0 = False
 #from dreampy.observing.locations import location, LMT, GBT, Amherst
 
@@ -399,6 +400,8 @@ class X64PlotBase:
         self.lines.append(line)
         if MATPLOTLIBV1_0:
             HighlightingDataCursor(self.lines)
+        else:
+            SimpleDataCursor(self.lines)
         self.set_subplot_title("%s" % self.bf.basename)
         self.set_legend(loc='best')
 
@@ -448,6 +451,8 @@ class X64PlotBase:
         self.plotobj.f.canvas.mpl_connect('pick_event', onpick)
         if MATPLOTLIBV1_0:
             HighlightingDataCursor(self.lines)
+        else:
+            SimpleDataCursor(self.lines)
 
     def implot_data(self, bf, data_type='amp',
                     vmin=None, vmax=None,
