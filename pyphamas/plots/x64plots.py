@@ -564,7 +564,7 @@ class X64PlotBase:
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
         if configfile is None:
-            if not hasattr(self, 'pixeldic'):
+            if not hasattr(self.bf, 'pixeldic'):
                 raise Exception("Read in config file first using read_xml_config method of BinaryFile instance")
         else:
             self.bf.read_xml_config(configfile)
