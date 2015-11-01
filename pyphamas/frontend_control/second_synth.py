@@ -11,7 +11,7 @@ class SecondSynth(object):
     HP83620A
     """
     def __init__(self, IP="gpib1.gbt.nrao.edu",
-		 PORT=1234, verbose=False):
+		 PORT=1234, verbose=True):
 	"""
 	Initializes telnet connection. Port 1234
 	is the port to talk to the synth
@@ -49,6 +49,13 @@ class SecondSynth(object):
         else:
             fstr = "%s GHz" % (freq/1.e9)
         self.write(":FREQ:CW %s\n" % fstr)
+
+    def getPower(self):
+        powertxt = self.ask(":POW:LEV?\n")
+        return float(powertxt.strip())
+    
+    def setPower(self, level):
+        self.write(":POW:LEV %sDBM\n" % float(level))
 
     def close(self):
         self.tn.close()
