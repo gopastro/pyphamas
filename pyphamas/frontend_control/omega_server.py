@@ -8,8 +8,8 @@ class OmegaServer:
     """
     Helper class for the Omega CYD208 Thermometer
     """
-    def __init__(self, IP="172.23.1.68", 
-		 PORT=15, chan=1, unit="K", verbose=False):
+    def __init__(self, IP="gbtrbrc.gbt.nrao.edu",
+		 PORT=6, chan=1, unit="K", verbose=False):
 	"""
 	Initializes telnet connection. Port 15 has been set up
 	with the right serial port parameters

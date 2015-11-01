@@ -553,6 +553,42 @@ class X64PlotBase:
         self.set_xlim(-64, 64)
         self.set_legend(loc='best')
         
+    def plot_receiver_row_spec(self, bf, rxrow, configfile=None,
+                               hold=False):
+        """
+        Plots the spectral power for a receiver row.
+        Assumes you have already read the config file. 
+        Or you can pass the configfile in the method args
+        """        
+        self.bf = bf
+        if self.bf is None:
+            raise Exception("Need to pass in a BinFile instance to plot object")
+        if self.configfile is None and not hasattr(self, 'pixeldic'):
+            raise Exception("Read in config file first using read_xml_config method of BinaryFile instance")
+        if not hasattr(self.bf, 'data_out'):
+            raise Exception("BinFile instance does not have any data.")
+        if not hold:
+            self.clear()
+        if not hasattr(self.bf, 'spec'):
+            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
+        self.lines = []        
+        for rxcol in range(1, 9):
+            pixel = "%s,%s" % (rxrow, rxcol)
+            if self.bf.pixeldic.has_key(pixel):
+                row, col = self.bf.pixeldic[pixel]
+                if hasattr(self.bf, 'pixel_label'):
+                    label="%d,%d (Pix: %s)" % (self.bf.row_start+row, self.bf.col_start+col, self.bf.pixel_label.get((row, col), 'NC'))
+                else:
+                    label="%d,%d" % (self.bf.row_start+row, self.bf.col_start+col)
+                line, = self.plot(numpy.arange(self.bf.bin_start, self.bf.bin_end+1),
+                                  self.bf.spec[row, col, :], linestyle='steps-mid',
+                                  label=label)
+                self.lines.append(line)                
+        self.set_subplot_title("%s" % self.bf.basename)
+        self.set_legend(loc='best', prop={'size': 6})                
+        if MATPLOTLIBV1_0:
+            HighlightingDataCursor(self.lines)
+
 class X64Plot(X64PlotBase, gtk.Window):
     """
     The base class for dreampy interactive plotting.

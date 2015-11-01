@@ -18,9 +18,9 @@ def get_status(msg):
     return stat_dic
 
 class WebStrip(object):
-    def __init__(self, host="192.168.151.101:80",
+    def __init__(self, host="rempwrstrip.gbt.nrao.edu",
                  admin="admin",
-                 password="1234"):
+                 password="dbps"):
         self.host = host
         self.admin = admin
         self.password = password
