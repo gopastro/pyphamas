@@ -40,7 +40,7 @@ class SecondSynth(object):
         return self.ask("*IDN?\n")
 
     def getFreq(self):
-        freqtxt = self.tn.ask(":FREQ:CW?\n")
+        freqtxt = self.ask(":FREQ:CW?\n")
         return float(freqtxt.strip())
 
     def setFreq(self, freq):
