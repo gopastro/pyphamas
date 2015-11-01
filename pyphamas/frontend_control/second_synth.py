@@ -59,3 +59,6 @@ class SecondSynth(object):
 
     def close(self):
         self.tn.close()
+
+    def __del__(self):
+        self.close()
