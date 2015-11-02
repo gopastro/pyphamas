@@ -11,6 +11,7 @@ setup(
     author='Gopal Narayanan <gopal@astro.umass.edu>',
     packages=find_packages(),
     scripts = ['bin/byu_slave',
+               'bin/x64reinitialize',
                ],
     )
 

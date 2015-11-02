@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+"""
+From the original reinitialize.py
+"""
+import socket
+from optparse import OptionParser
+
+# Set up command-line option parsing
+parser = OptionParser()
+
+parser.add_option("-I", "--IP",
+                  action="store", type="string", dest="ipaddress",
+                  default="172.23.1.60",
+                  help="specify IP address (default %default)")
+
+
+parser.add_option("-p", "--port",
+		  action="store", type="int", dest="port",
+                  default=6027,
+		  help="specify the port to talk to (default %default)")
+
+(options, args) = parser.parse_args()  
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((options.ipaddress, options.port))
+
+sock.sendall("INIT\n")
+msg = sock.recv(128)
+print msg
+
+sock.close()
