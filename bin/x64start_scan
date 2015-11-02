@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+"""
+From the original reinitialize.py
+"""
+import socket
+from optparse import OptionParser
+
+# Set up command-line option parsing
+parser = OptionParser()
+
+parser.add_option("-I", "--IP",
+                  action="store", type="string", dest="ipaddress",
+                  default="172.23.1.60",
+                  help="specify IP address (default %default)")
+
+
+parser.add_option("-p", "--port",
+		  action="store", type="int", dest="port",
+                  default=6027,
+		  help="specify the port to talk to (default %default)")
+
+parser.add_option("-b", "--bin_start",
+                  action="store", type="int", dest="bin_start",
+                  default=98,
+                  help="starting frequency channel (default %default)")
+
+parser.add_option("-B", "--bin_end",
+                  action="store", type="int", dest="bin_end",
+                  default=160,
+                  help="ending frequency channel (default %default)")
+
+parser.add_option("-c", "--col_start",
+                  action="store", type="int", dest="col_start",
+                  default=0,
+                  help="starting column (default %default)")
+
+parser.add_option("-C", "--col_end",
+                  action="store", type="int", dest="col_end",
+                  default=5,
+                  help="ending column (default %default)")
+
+parser.add_option("-r", "--row_start",
+                  action="store", type="int", dest="row_start",
+                  default=0,
+                  help="starting row (default %default)")
+
+parser.add_option("-R", "--row_end",
+                  action="store", type="int", dest="row_end",
+                  default=7,
+                  help="ending row (default %default)")
+
+parser.add_option("-n", "--num_secs",
+                  action="store", type="float", dest="num_secs",
+                  default=0.25,
+                  help="Number of seconds (default %default)")
+
+parser.add_option("-l", "--lsb_sel",
+                  action="store", type="int", dest="lsb_sel",
+                  default=10,
+                  help="LSB Select (default %default)")
+
+			
+
+(options, args) = parser.parse_args()  
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((options.ipaddress, options.port))
+
+print "Connected to %s on port %s" % (options.ipaddress, options.port)
+
+print "Sending Bins"
+sock.sendall("SETUP BIN_START=%d BIN_END=%d\n" % (options.bin_start, options.bin_end))
+msg = sock.recv(128)
+print msg
+
+print "Sending Cols"
+sock.sendall("SETUP COL_START=%d COL_END=%d\n" % (options.col_start, options.col_end))
+msg = sock.recv(128)
+print msg
+
+print "Sending Rows"
+sock.sendall("SETUP ROW_START=%d ROW_END=%d\n" % (options.row_start, options.row_end))
+msg = sock.recv(128)
+print msg
+
+print "Sending seconds"
+sock.sendall("SETUP NUM_SECS=%f\n" % options.num_secs)
+msg = sock.recv(128)
+print msg
+
+print "Sending LSB"
+sock.sendall("SETUP LSB_SEL=%d\n" % options.lsb_sel)
+msg = sock.recv(128)
+print msg
+
+print "Sending SCAN"
+sock.sendall("SCAN\n")
+msg = sock.recv(128)
+print msg
+
+sock.close()
+

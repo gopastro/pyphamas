@@ -24,6 +24,7 @@ parser.add_option("-p", "--port",
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect((options.ipaddress, options.port))
 
+print "Connected to %s on port %s" % (options.ipaddress, options.port)
 sock.sendall("INIT\n")
 msg = sock.recv(128)
 print msg

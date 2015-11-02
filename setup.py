@@ -12,6 +12,7 @@ setup(
     packages=find_packages(),
     scripts = ['bin/byu_slave',
                'bin/x64reinitialize',
+               'bin/x64start_scan',
                ],
     )
 
