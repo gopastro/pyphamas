@@ -22,7 +22,7 @@ omega = OmegaServer()
 now = datetime.datetime.now()
 ts = time.time()
 basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
-filename = os.path.join('/users/gnarayan', basetxt+'.log')
+filename = os.path.join('/users/gnarayan/omega_logs', basetxt+'.log')
 fp = open(filename, 'w')
 fp.write("#%s\n" % now)
 tdic = {}
