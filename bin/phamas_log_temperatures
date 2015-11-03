@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+"""
+Script that will turn on and log temperatures
+and then go back to sleep
+"""
+
+from pyphamas.frontend_control.webstrip import WebStrip
+from pyphamas.frontend_control.omega_server import OmegaServer
+import time
+import datetime
+import os
+
+ws = WebStrip()
+# Turn on Omega port (port 8)
+ws.port_on(8)
+
+# Wait 15 seconds for Omega meter to settle
+print "Sleeping 15 seconds for Omega meter to settle"
+time.sleep(15)
+
+omega = OmegaServer()
+now = datetime.datetime.now()
+ts = time.time()
+basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
+filename = os.path.join('/home/gnarayan', basetxt+'.log')
+fp = open(filename, 'w')
+fp.write("#%s\n" % now)
+tdic = {}
+for chan in range(1, 7):
+    rdg = omega.read_chan(1)
+    tdic.update(rdg)
+    time.sleep(3)
+
+
+for chan in range(1, 7):
+    fp.write("%d, %s\n" % (chan, tdic.get('%d' % chan, '-')))
+
+fp.close()
+ws.port_off(8)
+    
+

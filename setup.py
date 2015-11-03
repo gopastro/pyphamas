@@ -13,6 +13,7 @@ setup(
     scripts = ['bin/byu_slave',
                'bin/x64reinitialize',
                'bin/x64start_scan',
+               'bin/phamas_log_temperatures',
                ],
     )
 
