@@ -27,7 +27,7 @@ fp = open(filename, 'w')
 fp.write("#%s\n" % now)
 tdic = {}
 for chan in range(1, 7):
-    rdg = omega.read_chan(1)
+    rdg = omega.read_chan(chan)
     tdic.update(rdg)
     print "Read %s" % rdg
     time.sleep(3)
