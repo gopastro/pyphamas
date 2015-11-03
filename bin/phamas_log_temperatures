@@ -22,13 +22,14 @@ omega = OmegaServer()
 now = datetime.datetime.now()
 ts = time.time()
 basetxt = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S')
-filename = os.path.join('/home/gnarayan', basetxt+'.log')
+filename = os.path.join('/users/gnarayan', basetxt+'.log')
 fp = open(filename, 'w')
 fp.write("#%s\n" % now)
 tdic = {}
 for chan in range(1, 7):
     rdg = omega.read_chan(1)
     tdic.update(rdg)
+    print "Read %s" % rdg
     time.sleep(3)
 
 
@@ -37,5 +38,7 @@ for chan in range(1, 7):
 
 fp.close()
 ws.port_off(8)
+print "Turning off Omega Thermometer port"
+
     
 
