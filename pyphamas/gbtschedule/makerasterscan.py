@@ -225,7 +225,12 @@ def plottraj(traj):
     pyp.ylabel('jerk [deg/sec^3]')
     pyp.show()
     
-def makerasterscan(xs = 0.0,ys = 0.0,xf = 0.0,yf = 0.0,rLen=5.0,vel=0.75,nRows=10,yStep=0.1,tSlew = 8.0,calc_dt=0.25,declat = False):
+def makerasterscan(xs = 0.0, ys = 0.0, 
+                   xf = 0.0, yf = 0.0,
+                   rLen=5.0, vel=0.75, 
+                   nRows=10, yStep=0.1,
+                   tSlew = 8.0, calc_dt=0.25,
+                   declat = False):
     """
     ARGUMENTS:
     (xs,ys), (xf,yf) : start and finish location for scan in arcminutes - default to origin
@@ -244,7 +249,7 @@ def makerasterscan(xs = 0.0,ys = 0.0,xf = 0.0,yf = 0.0,rLen=5.0,vel=0.75,nRows=1
     """
 
     # This recods all of the parameters
-    paramtab = scanpars( locals() )
+    paramtab = generate.scanpars( locals() )
 
     # convert all inputs from arcmin to deg
     xs = xs/60.0

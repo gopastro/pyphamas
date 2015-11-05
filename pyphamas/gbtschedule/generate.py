@@ -51,15 +51,15 @@ def daisy( map_radius,
 
     # Note that needs to be the first line,
     # otherwise will pick up local variables which are not parameters
-    paramtab=scanpars( locals() )
+    paramtab = scanpars( locals() )
 
-    phdu=pyfits.PrimaryHDU()
+    phdu = pyfits.PrimaryHDU()
     phdu.header.update("stype", "daisy")
     phdu.header.update("ver", "$Revision: 1.10 $")
     
     
     # Need extra steps for extimates of velocity and acceleration...
-    t=numpy.arange( float(scan_length) / calc_dt + 2 ) * calc_dt - calc_dt
+    t = numpy.arange( float(scan_length) / calc_dt + 2 ) * calc_dt - calc_dt
 
 
     major, minor = daisypatern(map_radius,
@@ -77,7 +77,7 @@ def daisy( map_radius,
 
 
     
-    hdl=[
+    hdl = [
         phdu,
         st,
         paramtab
@@ -100,15 +100,15 @@ def StraightLine( startp,
     endp   = same for ending point
     """
 
-    paramtab=scanpars( locals() )
+    paramtab = scanpars( locals() )
 
-    phdu=pyfits.PrimaryHDU()
+    phdu = pyfits.PrimaryHDU()
     phdu.header.update("stype", "StraightLine")
     phdu.header.update("ver", "$Revision: 1.10 $")
     
     
     # Need extra steps for extimates of velocity and acceleration...
-    t=numpy.arange( float(scan_length) / calc_dt + 2 ) * calc_dt - calc_dt
+    t = numpy.arange( float(scan_length) / calc_dt + 2 ) * calc_dt - calc_dt
 
 
     major, minor = StraightLineGen(startp, endp, scan_length , t)
@@ -121,7 +121,7 @@ def StraightLine( startp,
 
 
     
-    hdl=[
+    hdl = [
         phdu,
         st,
         paramtab
@@ -146,8 +146,8 @@ def DerVel(major,minor,t):
     def vel( mv ,t ):
         return ( mv [mp+1] - mv[mp-1]  ) / (t[mp+1] - t[mp-1] )
 
-    majv= vel(major, t)
-    minv= vel(minor, t)
+    majv =  vel(major, t)
+    minv =  vel(minor, t)
     return majv, minv
 
 def DerAcc(major,minor,t):
@@ -161,8 +161,8 @@ def DerAcc(major,minor,t):
                  mv[mp+1] ) / ( ((t[mp+1] - t[mp-1] ))/2)**2
     
     
-    maja= acc(major, t)
-    mina= acc(minor, t)
+    maja =  acc(major, t)
+    mina =  acc(minor, t)
     return maja, mina
     
 
@@ -226,7 +226,7 @@ def scantable( posp, velp, accp, dur ):
     dur : a vector containing the duration of each segment
     """
 
-    coldefs= [ pyfits.Column( "MajorPos" , "E" , "", array=posp[0] ),
+    coldefs =  [ pyfits.Column( "MajorPos" , "E" , "", array=posp[0] ),
                pyfits.Column( "MinorPos" , "E" , "", array=posp[1] ),
                pyfits.Column( "MajorVel" , "E" , "", array=velp[0] ),
                pyfits.Column( "MinorVel" , "E" , "", array=velp[1] ),
@@ -241,10 +241,10 @@ def scantable( posp, velp, accp, dur ):
 
 def scanpars( d ):
 
-    coldefs= [ pyfits.Column( "Parameter" , "30A" ) ,
+    coldefs =  [ pyfits.Column( "Parameter" , "30A" ) ,
                pyfits.Column( "Value" , "80A" ) ]
 
-    tabout=pyfits.new_table( coldefs , nrows=len(d) )
+    tabout = pyfits.new_table( coldefs , nrows=len(d) )
 
     for x,rowout in izip(d, tabout.data ):
         rowout.setfield("Parameter", x )
