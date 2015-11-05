@@ -193,8 +193,8 @@ def plottraj(traj):
     maxt = max(traj.t)
     pyp.figure()
     pyp.subplot(411)
-    xx = 60.0*asarray(traj.x)
-    yy = 60.0*asarray(traj.y)
+    xx = 60.0*numpy.asarray(traj.x)
+    yy = 60.0*numpy.asarray(traj.y)
     pyp.plot(xx,yy)
     if (min(yy)<0):
         ymin = 1.15*min(yy)
@@ -284,10 +284,10 @@ def makerasterscan(xs = 0.0, ys = 0.0,
         if (not i % 2):
             A = pathSolve(p0, p1, v0, v1, T)
         else:
-            A = zeros((2,3))
+            A = numpy.zeros((2,3))
 
         # calculate this segment, with times starting at zero
-        trajT = arange( float(T) / calc_dt) * calc_dt
+        trajT = numpy.arange( float(T) / calc_dt) * calc_dt
         pMajor, pMinor, vMajor, vMinor, aMajor, aMinor = \
                 trajGenerate(p0, v0, A, trajT)
 
@@ -305,12 +305,12 @@ def makerasterscan(xs = 0.0, ys = 0.0,
             tTot.append(trajT[j])
 
 
-    durations =  ones( len(tTot)) * calc_dt
-    st = generate.scantable( [array(pMajTot) , array(pMinTot)] ,
-                             [array(vMajTot) , array(vMinTot)] ,
-                             [array(aMajTot) , array(aMinTot)] ,
-                             durations
-                             )
+    durations =  numpy.ones( len(tTot)) * calc_dt
+    st = scantable( [numpy.array(pMajTot) , numpy.array(pMinTot)] ,
+                    [numpy.array(vMajTot) , numpy.array(vMinTot)] ,
+                    [numpy.array(aMajTot) , numpy.array(aMinTot)] ,
+                    durations
+                    )
     
     hdl = [
         phdu,

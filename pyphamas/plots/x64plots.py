@@ -592,6 +592,46 @@ class X64PlotBase:
         if MATPLOTLIBV1_0:
             HighlightingDataCursor(self.lines)
 
+    def plottraj(self, traj, hold=False):
+        if not hold:
+            self.clear()
+        mint = min(traj.t)
+        maxt = max(traj.t)
+        self.add_subplot(4, 1, 1)
+        xx = 60.0*numpy.asarray(traj.x)
+        yy = 60.0*numpy.asarray(traj.y)
+        self.plot(xx, yy, marker='o')
+        if (min(yy) < 0):
+            ymin = 1.15*min(yy)
+        else:
+            ymin = 0.85*min(yy)
+        if (max(yy) > 0):
+            ymax = 1.15*max(yy)
+        else:
+            ymax = 0.85*max(yy)
+        self.set_ylim(ymin, ymax)
+        self.set_xlabel('Position/arcmin')
+        self.set_ylabel('Position/arcmin')
+        self.add_subplot(4, 1, 2)
+        self.plot(traj.t,traj.vx,'b',traj.t,traj.vy,
+                  'g',[mint,maxt],[0.3,0.3],'r',[mint,maxt],[-0.3,-0.3],'r')
+        self.set_ylim(-0.4, 0.4)
+        self.set_xlabel('time/sec')
+        self.set_ylabel('velocity [deg/sec]')
+        self.add_subplot(4, 1, 3)
+        self.plot(traj.t,traj.ax,'b',traj.t,traj.ay,'g',[mint,maxt],[0.08,0.08],'r',[mint,maxt],[-0.08,-0.08],'r')
+        self.set_ylim(-0.1, 0.1)
+        self.set_xlabel('time/sec')
+        self.set_ylabel('acceleration [deg/sec^2]')
+        self.add_subplot(4, 1, 4)
+        # approximate jerk limit from Paul Ries' analysis - 0.2 arcmin/sec^3 ~ 0.003 deg/s^3
+        self.plot(traj.t,traj.jx,'b',traj.t,traj.jy,'g',[mint,maxt],[0.003,0.003],'r',[mint,maxt],[-0.003,-0.003],'r')
+        self.set_ylim(-0.005,0.005)
+        self.set_xlabel('time/sec')
+        self.set_ylabel('jerk [deg/sec^3]')
+        #pyp.show()
+
+
 class X64Plot(X64PlotBase, gtk.Window):
     """
     The base class for dreampy interactive plotting.
