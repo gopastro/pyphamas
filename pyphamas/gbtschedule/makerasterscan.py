@@ -14,7 +14,7 @@
 #import numarray.linear_algebra as la 
 import numpy
 import  pyfits
-from generate import scantable
+from generate import scantable, scanpars
 #from matplotlib import *
 import matplotlib.pyplot as pyp
 
@@ -249,7 +249,7 @@ def makerasterscan(xs = 0.0, ys = 0.0,
     """
 
     # This recods all of the parameters
-    paramtab = generate.scanpars( locals() )
+    paramtab = scanpars( locals() )
 
     # convert all inputs from arcmin to deg
     xs = xs/60.0
