@@ -18,3 +18,5 @@ class GBTFITS(object):
         print "FITS file %s opened" % self.filename
         print self.hdulist.info()
 
+    def close(self):
+        self.hdulist.close()
