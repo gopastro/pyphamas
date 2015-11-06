@@ -25,8 +25,8 @@ class DCRPoint(object):
 
     def gatherData(self):
         self.sl = scanLog(self.projDir)
-        antFile = sl.getAntenna(self.scan)
-        dcrFile = sl.getDCR(self.scan)
+        antFile = self.sl.getAntenna(self.scan)
+        dcrFile = self.sl.getDCR(self.scan)
         print antFile
         
         # get DCR data
