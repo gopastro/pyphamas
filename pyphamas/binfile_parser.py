@@ -48,6 +48,14 @@ class BinFile(object):
         stat = os.stat(self.filename)
         self.file_length = stat.st_size
         self.get_param_data()
+        self.adc_list = [1, 2, 17, 18, 33, 34, 49, 50,
+                         9, 10, 25, 26, 41, 42, 57, 58,
+                         3, 4, 19, 20, 35, 36, 51, 52,
+                         11, 12, 27, 28, 43, 44, 59, 60,
+                         5, 6, 21, 22, 37, 38, 53, 54, 
+                         13, 14, 29, 30, 45, 46, 61, 62,
+                         7, 8, 23, 24, 39, 40, 55, 56,
+                         15, 16, 31, 32, 47, 48, 63, 64]
 
     def get_param_data(self):
         self.fp = open(self.filename, 'rb')
@@ -490,6 +498,8 @@ class BinFile(object):
                            # fiber receiver used
         self.rxcarddic = {} # for a given frontend pixel has
                             # mapping to rxdownconverter card used
+        self.cable_adc_dic = {} # for a given IF cable number 
+                                # what is the ADC it is attached to
         for row in rows[2:-1]:
             args = row.split()
             adc = int(args[0])
@@ -501,12 +511,17 @@ class BinFile(object):
             fibercable = args[3].strip()
             rxcard = args[4].strip()
             print "ADC: %d, cable: %d, pixel: %s" % (adc, cable, pixel)
+            if cable != 'NC':
+                self.cable_adc_dic[cable] = adc
             if pixel != 'NC':
-                self.pixeldic[pixel] = get_rowcol_for_cable(cable)
+                self.pixeldic[pixel] = self.get_rowcol_for_adc(self.cable_adc_dic[cable])
                 self.fiberdic[pixel] = fibercable
                 self.rxcarddic[pixel] = rxcard
         self.pixel_label = dict((v, k) for k, v in self.pixeldic.iteritems())
 
+    def get_rowcol_for_adc(self, adc):
+        adc_index = self.adc_list.index(adc)
+        return get_rowcol_for_cable(adc_index)
 
     def read_xml_config_old(self, configfile):
         """
