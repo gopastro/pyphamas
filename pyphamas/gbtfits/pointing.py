@@ -73,7 +73,7 @@ class DCRPoint(object):
         # interpolate over time samples
         self.data = []
         for i in range(6):
-            self.data.append(np.interp(self.antTime, self.dcrTime, self.dataArr[i]))
+            self.data.append(numpy.interp(self.antTime, self.dcrTime, self.dataArr[i]))
 
         # and create a "time since start" array
         self.time = (self.antTime - self.antTime[0]) * 24.0 * 3600.0
