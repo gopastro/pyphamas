@@ -653,7 +653,7 @@ class X64PlotBase:
                       label='%d' % (i+1))
             self.set_legend(loc='best')
         self.set_xlabel(xtype)
-        self.set_subplot_title("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
+        self.set_fig_title("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
         
 
 
