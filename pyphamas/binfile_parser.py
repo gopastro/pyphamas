@@ -511,7 +511,7 @@ class BinFile(object):
             fibercable = args[3].strip()
             rxcard = args[4].strip()
             print "ADC: %d, cable: %d, pixel: %s" % (adc, cable, pixel)
-            if cable != 'NC':
+            if cable != -1:
                 self.cable_adc_dic[cable] = adc
             if pixel != 'NC':
                 self.pixeldic[pixel] = self.get_rowcol_for_adc(self.cable_adc_dic[cable])
