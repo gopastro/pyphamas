@@ -52,6 +52,7 @@ class DCRPoint(object):
         antHDU.obtain_positional_data()
         antHDU.obtain_time_samples()
         self.antTime = antHDU.antTimes
+        self.source = antHDU.hdulist[0].header['OBJECT']
         #self.obsc_el = antHDU.obsc_el
         #self.mnt_el = antHDU.mnt_el
         #self.sobsc_el = antHDU.sobsc_el

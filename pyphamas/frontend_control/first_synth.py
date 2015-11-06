@@ -5,7 +5,7 @@ adapter to talk to the synthesizer
 import telnetlib
 import time
 
-class SecondSynth(object):
+class FirstSynth(object):
     """
     Helper class for the Second Synth
     HP83620A

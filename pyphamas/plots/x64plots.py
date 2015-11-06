@@ -631,6 +631,31 @@ class X64PlotBase:
         self.set_ylabel('jerk [deg/sec^3]')
         #pyp.show()
 
+    def plotdcr_all(self, dpoint, xtype='time', hold=False):
+        """
+        Given a dpoint object - (see pyphamas.gbtfits.pointing)
+        this will plot all DCR data values against xtype
+        xtype can be one of Time, el or az
+        """
+        if not hold:
+            self.clear()
+        if not hasattr(dpoint, 'time'):
+            raise Exception("dpoint object does not yet have any data. Run gatherData on it")
+        if xtype == 'time':
+            x = dpoint.time
+        elif xtype == 'el':
+            x = dpoint.el
+        elif xtype == 'az':
+            x = dpoint.az
+        for i in range(6):
+            self.add_subplot(3, 2, i+1)
+            self.plot(x, dpoint.data[i], linestyle='steps-mid', 
+                      label='%d' % (i+1))
+            self.set_legend(loc='best')
+        self.set_xlabel(xtype)
+        self.set_subplot_title("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
+        
+
 
 class X64Plot(X64PlotBase, gtk.Window):
     """
