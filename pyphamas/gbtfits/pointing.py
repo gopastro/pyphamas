@@ -92,6 +92,7 @@ class DCRPoint(object):
         popt, pcov = curve_fit(gauss, x, self.data[chan], 
                                p0 = [p1, p2, p3, p4] )
         self.fit = gauss(x, popt[0], popt[1], popt[2], popt[3])
+        self.fit_params = popt
 
 #         # This should be linearly increasing, but for planets it is flat.
 
