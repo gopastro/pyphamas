@@ -48,14 +48,16 @@ class BinFile(object):
         stat = os.stat(self.filename)
         self.file_length = stat.st_size
         self.get_param_data()
-        self.adc_list = [1, 2, 17, 18, 33, 34, 49, 50,
-                         9, 10, 25, 26, 41, 42, 57, 58,
-                         3, 4, 19, 20, 35, 36, 51, 52,
-                         11, 12, 27, 28, 43, 44, 59, 60,
-                         5, 6, 21, 22, 37, 38, 53, 54, 
-                         13, 14, 29, 30, 45, 46, 61, 62,
-                         7, 8, 23, 24, 39, 40, 55, 56,
-                         15, 16, 31, 32, 47, 48, 63, 64]
+        self.adc_list = numpy.reshape(numpy.array([1, 2, 17, 18, 33, 34, 49, 50,
+                                                   9, 10, 25, 26, 41, 42, 57, 58,
+                                                   3, 4, 19, 20, 35, 36, 51, 52,
+                                                   11, 12, 27, 28, 43, 44, 59, 60,
+                                                   5, 6, 21, 22, 37, 38, 53, 54, 
+                                                   13, 14, 29, 30, 45, 46, 61, 62,
+                                                   7, 8, 23, 24, 39, 40, 55, 56,
+                                                   15, 16, 31, 32, 47, 48, 63, 64]), 
+                                      (8, 8),
+                                      order='F')
 
     def get_param_data(self):
         self.fp = open(self.filename, 'rb')
@@ -520,8 +522,8 @@ class BinFile(object):
         self.pixel_label = dict((v, k) for k, v in self.pixeldic.iteritems())
 
     def get_rowcol_for_adc(self, adc):
-        adc_index = self.adc_list.index(adc)
-        return get_rowcol_for_cable(adc_index)
+        indices = numpy.where(self.adc_list == adc)
+        return indices[0][0], indices[1][0]
 
     def read_xml_config_old(self, configfile):
         """
