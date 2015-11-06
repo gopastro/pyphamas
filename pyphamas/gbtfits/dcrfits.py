@@ -18,6 +18,10 @@ class DCRFITS(GBTFITS):
             raise Exception("Method only applies for DCR FITS file")      
         self.dcrTimes = self.hdulist[3].data['TIMETAG']
 
+    def obtain_data(self):
+        dataTable = self.hdulist['DATA'].data
+        self.data = dataTable.field('DATA')
+        
     def calibrate(self):
         tCal = 3.3 # Standard value
         iport = 1        

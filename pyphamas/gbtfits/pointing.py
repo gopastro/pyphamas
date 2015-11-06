@@ -24,7 +24,7 @@ class DCRPoint(object):
         self.projDir = self.projId + "_0" + str(self.session)
 
     def gatherData(self):
-        sl = scanLog(self.projDir)
+        self.sl = scanLog(self.projDir)
         antFile = sl.getAntenna(self.scan)
         dcrFile = sl.getDCR(self.scan)
         print antFile
@@ -33,8 +33,10 @@ class DCRPoint(object):
 
         dcrHDU = DCRFITS(dcrFile)
         dcrHDU.obtain_time_samples()
+        dcrHDU.obtain_data()
         self.dcrTime = dcrHDU.dcrTimes
-        dcrData = dcrHDU['DATA'].data.field('DATA')
+        dcrData = dcrHDU.data
+        #dcrData = dcrHDU['DATA'].data.field('DATA')
         dcrHDU.close()
         self.dataArr = dcrData[:, 0]
 
