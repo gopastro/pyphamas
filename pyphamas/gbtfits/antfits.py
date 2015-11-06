@@ -49,7 +49,7 @@ class ANTFITS(GBTFITS):
             raise Exception("Method only applies for ANTENNA FITS file")          
         self.obtain_positional_data()        
         self.compute_pointing_model()
-        self.crossEl = ((self.obsc_az - self.mnt_az - self.pnt_az) * 60.) * numpy.cos(np.radians(self.mnt_el))
+        self.crossEl = ((self.obsc_az - self.mnt_az - self.pnt_az) * 60.) * numpy.cos(numpy.radians(self.mnt_el))
         self.El = (self.obsc_el - self.mnt_el - self.pnt_el)*60.
         return self.crossEl,self.El
 
