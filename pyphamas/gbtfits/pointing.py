@@ -35,10 +35,10 @@ class DCRPoint(object):
         dcrHDU.obtain_time_samples()
         dcrHDU.obtain_data()
         self.dcrTime = dcrHDU.dcrTimes
-        dcrData = dcrHDU.data
+        self.dcrData = dcrHDU.data
         #dcrData = dcrHDU['DATA'].data.field('DATA')
         dcrHDU.close()
-        self.dataArr = dcrData[:, 0]
+        self.dataArr = self.dcrData[:, 0]
 
         # get Antenna header info, and data
 
@@ -68,7 +68,7 @@ class DCRPoint(object):
         
         
         # interpolate over time samples
-        data = np.interp(self.antTime, self.dcrTime, self.dataArr)
+        self.data = np.interp(self.antTime, self.dcrTime, self.dataArr)
 
         # and create a "time since start" array
         self.time = (self.antTime - self.antTime[0]) * 24.0 * 3600.0
