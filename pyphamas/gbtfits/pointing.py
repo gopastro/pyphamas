@@ -50,19 +50,19 @@ class DCRPoint(object):
         antHDU.obtain_positional_data()
         antHDU.obtain_time_samples()
         self.antTime = antHDU.antTimes
-        self.obsc_el = antHDU.obsc_el
-        self.mnt_el = antHDU.mnt_el
-        self.sobsc_el = antHDU.sobsc_el
-        self.smntc_el = antHDU.smntc_el
+        #self.obsc_el = antHDU.obsc_el
+        #self.mnt_el = antHDU.mnt_el
+        #self.sobsc_el = antHDU.sobsc_el
+        #self.smntc_el = antHDU.smntc_el
 
-        self.obsc_az = antHDU.obsc_az
-        self.mnt_az = antHDU.mnt_az
-        self.sobsc_az = antHDU.sobsc_az
-        self.smntc_az = antHDU.smntc_az
-
+        #self.obsc_az = antHDU.obsc_az
+        #self.mnt_az = antHDU.mnt_az
+        #self.sobsc_az = antHDU.sobsc_az
+        #self.smntc_az = antHDU.smntc_az
+        self.az, self.el = antHDU.compute_tracking_cen_coords()
         antHDU.close()
-        self.el =  (self.obsc_el - self.mnt_el - (self.sobsc_el - self.smntc_el))
-        self.az =  (self.obsc_az - self.mnt_az - (self.sobsc_az - self.smntc_az))
+        #self.el =  (self.obsc_el - self.mnt_el - (self.sobsc_el - self.smntc_el))
+        #self.az =  (self.obsc_az - self.mnt_az - (self.sobsc_az - self.smntc_az))
 
 
         
