@@ -123,7 +123,7 @@ class GBTScan(object):
     def start_gbt_scan(self, bin_start=98, bin_end=160,
                        col_start=0, col_end=5,
                        row_start=0, row_end=7,
-                       num_secs=1.0, lsb_sel=8,
+                       num_secs=1.0, lsb_sel=9,
                        source_name='', scan_number=1,
                        dmjd_start=None, project_id="",
                        receiver=""):
