@@ -3,7 +3,7 @@ from .antfits import ANTFITS
 from .dcrfits import DCRFITS
 
 #import argparse
-import numpy as np
+import numpy
 import pylab as plt
 from scipy import signal
 from numpy import random
@@ -12,7 +12,7 @@ from scipy.optimize import curve_fit
 
 
 def gauss(x, height, width, center, offset):
-    return height * np.exp(-(x-center)**2 / width**2) + offset
+    return height * numpy.exp(-(x-center)**2 / width**2) + offset
 
 
 class DCRPoint(object):
@@ -79,6 +79,20 @@ class DCRPoint(object):
         self.time = (self.antTime - self.antTime[0]) * 24.0 * 3600.0
 
 
+    def fit_data(self, chan=0, xtype='el'):
+        p4 = numpy.mean(self.data[chan])
+        p1 = numpy.max(self.data[chan]) - p4
+        x = getattr(self, xtype)
+        p2 = x[-1]/20.0
+        p3 = x[-1] / 2.0
+        print p1,p2,p3,p4        
+
+        # do the fit
+
+        popt, pcov = curve_fit(gauss, x, self.data[chan], 
+                               p0 = [p1, p2, p3, p4] )
+        self.fit = gauss(x, popt[0], popt[1], popt[2], popt[3])
+
 #         # This should be linearly increasing, but for planets it is flat.
 
 #         plt.plot(time,el)
@@ -91,8 +105,8 @@ class DCRPoint(object):
 
 # # hard code here some initial guesses
 
-#     p4 = np.mean(data)
-#     p1 = np.max(data) - p4
+#     p4 = numpy.mean(data)
+#     p1 = numpy.max(data) - p4
 #     p2 = time[-1] /20.0
 #     p3 = time[-1] / 2.0
 #     print p1,p2,p3,p4
