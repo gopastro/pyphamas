@@ -651,7 +651,7 @@ class X64PlotBase:
         elif xtype == 'az':
             x = dpoint.az
         gridmap = {0: 2,
-                   1: 5
+                   1: 5,
                    2: 6,
                    3: 7,
                    4: 8,
