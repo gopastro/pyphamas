@@ -34,6 +34,12 @@ def get_rowcol_for_cable(cable):
         col = cable%8 - 1
     return col, row
 
+def rebin(specin, outsize=2048):
+    """Very simple boxcar average of input spectra or timestream"""
+    f = len(specin)/outsize
+    return numpy.array([specin[f*i:f*i+f].mean() for i in range(outsize)])
+
+
 class BinFile(object):
     def __init__(self, filename, number_packets=None,
                  packets_to_skip=None,
