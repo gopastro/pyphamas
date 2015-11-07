@@ -409,7 +409,7 @@ class X64PlotBase:
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
-        if not hasattr(self.bf, 'data_out') or hasattr(self.bf, 'data_accum'):
+        if not hasattr(self.bf, 'data_out') or not hasattr(self.bf, 'data_accum'):
             raise Exception("BinFile instance does not have any data.")
         if not hold:
             self.clear()
