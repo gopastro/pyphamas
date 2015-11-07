@@ -650,8 +650,15 @@ class X64PlotBase:
             x = dpoint.el
         elif xtype == 'az':
             x = dpoint.az
+        gridmap = {0: 2,
+                   1: 5
+                   2: 6,
+                   3: 7,
+                   4: 8,
+                   5, 10
+                   }
         for i in range(6):
-            self.add_subplot(3, 2, i+1)
+            self.add_subplot(3, 4, gridmap[i])
             self.plot(x, dpoint.data[i], linestyle='steps-mid', 
                       label='%d' % (i+1))
             self.set_legend(loc='best')
