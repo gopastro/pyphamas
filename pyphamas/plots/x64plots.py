@@ -409,12 +409,15 @@ class X64PlotBase:
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
-        if not hasattr(self.bf, 'data_out'):
+        if not hasattr(self.bf, 'data_out') or hasattr(self.bf, 'data_accum'):
             raise Exception("BinFile instance does not have any data.")
         if not hold:
             self.clear()
         if not hasattr(self.bf, 'spec'):
-            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
+            if hasattr(self.bf, 'data_accum'):
+                self.bf.spec = 10.*numpy.log10(self.bf.data_accum)
+            else:
+                self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
         self.lines = []
         for row in xrange(self.bf.num_rows):
             for col in xrange(self.bf.num_cols):
