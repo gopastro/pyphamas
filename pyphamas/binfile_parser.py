@@ -53,7 +53,9 @@ class BinFile(object):
         self.basename, _ = os.path.splitext(os.path.basename(self.filename))
         stat = os.stat(self.filename)
         self.file_length = stat.st_size
-        self.get_param_data()
+        self.fp = open(self.filename, 'rb')
+        print "Filename %s with size %.3f MB opened" % (self.filename, float(self.file_length)/(1024.*1024))
+        self.get_param_data(verbose=True)
         self.adc_list = numpy.reshape(numpy.array([1, 2, 17, 18, 33, 34, 49, 50,
                                                    9, 10, 25, 26, 41, 42, 57, 58,
                                                    3, 4, 19, 20, 35, 36, 51, 52,
@@ -65,13 +67,13 @@ class BinFile(object):
                                       (8, 8),
                                       order='F')
 
-    def get_param_data(self):
-        self.fp = open(self.filename, 'rb')
-        print "Filename %s with size %.3f MB opened" % (self.filename, float(self.file_length)/(1024.*1024))
+    def get_param_data(self, verbose=False):
+        self.fp.seek(0)
         gulp_bytes = struct.unpack('4B', self.fp.read(4))
         # Check to see if the Gulp header (d4 c3 b2 a1) is present
         if gulp_bytes[0] != 0xd4 or gulp_bytes[1] != 0xc3 or gulp_bytes[2] != 0xb2 or gulp_bytes[3] != 0xa1:
-            print "No GULP Bytes found"
+            if verbose:
+                print "No GULP Bytes found"
             GULP_HEADER_LENGTH = 0
         
         self.fp.seek(0)
@@ -131,7 +133,8 @@ class BinFile(object):
     
         # Calculate the number of packets
         self.total_packets = (self.file_length - GULP_HEADER_LENGTH)/self.dist_between
-        print "Number of total packets available: %d" % self.total_packets
+        if verbose:
+            print "Number of total packets available: %d" % self.total_packets
 
         # Create element/bin packet table
         self.I = numpy.zeros((self.num_rows*self.num_cols, self.num_bins), 
@@ -146,6 +149,7 @@ class BinFile(object):
                       number_packets=None,
                       number_bins=None):
         t1 = time.time()
+        self.get_param_data()  # always get to point after header in file
         self.packets_to_skip = packets_to_skip or self.packets_to_skip
         self.number_packets = number_packets or self.number_packets
         self.number_bins = number_bins or self.number_bins
