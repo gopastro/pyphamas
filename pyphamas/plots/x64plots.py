@@ -657,11 +657,18 @@ class X64PlotBase:
                    4: 8,
                    5: 10
                    }
+        dcr_ids = {0: '3,3',
+                   1: '4,2',
+                   2: '4,3',
+                   3: '4,4',
+                   4: '4,5',
+                   5: '5,6'
+                   }
         for i in range(6):
             self.add_subplot(3, 4, gridmap[i])
             self.plot(x, dpoint.data[i], linestyle='steps-mid', 
-                      label='%d' % (i+1))
-            self.set_legend(loc='best')
+                      label='%s' % dcr_ids[i])
+            self.set_legend(loc='best', prop={'size': 6})
         self.set_xlabel(xtype)
         self.set_figtitle("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
         
