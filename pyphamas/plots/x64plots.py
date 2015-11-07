@@ -655,7 +655,7 @@ class X64PlotBase:
                    2: 6,
                    3: 7,
                    4: 8,
-                   5, 10
+                   5: 10
                    }
         for i in range(6):
             self.add_subplot(3, 4, gridmap[i])
