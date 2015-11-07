@@ -686,7 +686,8 @@ class X64Plot(X64PlotBase, gtk.Window):
         self.alive = True
         self.show_all()
         self.gtk_catchup()
-        #gtk.set_interactive()
+        if not MATPLOTLIBV1_0:
+            gtk.set_interactive()
         #datacursor()
 
     def gtk_catchup(self):
