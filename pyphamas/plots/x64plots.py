@@ -388,8 +388,9 @@ class X64PlotBase:
         if not hold:
             self.clear()
             self.lines = []
-        if not hasattr(self.bf, 'spec'):
-            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
+        #if not hasattr(self.bf, 'spec'):
+        # recalculate spec each time
+        self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
         if hasattr(self.bf, 'pixel_label'):
             label="Row%d, Col%d (Pix: %s)" % (self.bf.row_start+row, self.bf.col_start+col, self.bf.pixel_label.get((row, col), 'NC'))
         else:
@@ -413,11 +414,11 @@ class X64PlotBase:
             raise Exception("BinFile instance does not have any data.")
         if not hold:
             self.clear()
-        if not hasattr(self.bf, 'spec'):
-            if hasattr(self.bf, 'data_accum'):
-                self.bf.spec = 10.*numpy.log10(self.bf.data_accum)
-            else:
-                self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
+        #if not hasattr(self.bf, 'spec'):
+        if hasattr(self.bf, 'data_accum'):
+            self.bf.spec = 10.*numpy.log10(self.bf.data_accum)
+        else:
+            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
         self.lines = []
         for row in xrange(self.bf.num_rows):
             for col in xrange(self.bf.num_cols):
