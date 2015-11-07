@@ -259,10 +259,10 @@ class BinFile(object):
             
             if i == 0:
                 print complexes[self.I].shape
-            self.data_accum += numpy.abs((numpy.reshape(complexes[self.I], 
+            self.data_accum += numpy.abs(numpy.reshape(complexes[self.I], 
                                              (self.num_rows, self.num_cols, self.num_bins),
                                              order='F')
-                                         )**2)
+                                         )**2
             #if i == 0:
             #    print complexes.shape
             #    print complexes
