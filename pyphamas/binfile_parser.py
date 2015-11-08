@@ -9,6 +9,7 @@ import os
 import numpy
 import time
 from xml.etree.ElementTree import parse
+from pyphamas.utils import sti_correlate
 
 UDP_HEADER_LENGTH = 66
 GULP_HEADER_LENGTH = 24
@@ -217,6 +218,7 @@ class BinFile(object):
                             number_packets=None,
                             number_bins=None):
         t1 = time.time()
+        self.get_param_data()  # always get to point after header in file
         self.packets_to_skip = packets_to_skip or self.packets_to_skip
         self.number_packets = number_packets or self.number_packets
         self.number_bins = number_bins or self.number_bins
@@ -290,6 +292,7 @@ class BinFile(object):
                             bin_start=None,
                             bin_end=None):
         t1 = time.time()
+        self.get_param_data()  # always get to point after header in file
         self.packets_to_skip = packets_to_skip or self.packets_to_skip
         self.number_packets = number_packets or self.number_packets
         self.number_bins = number_bins or self.number_bins
@@ -363,6 +366,7 @@ class BinFile(object):
                                  bin_start=None,
                                  bin_end=None):
         t1 = time.time()
+        self.get_param_data()  # always get to point after header in file
         self.packets_to_skip = packets_to_skip or self.packets_to_skip
         self.number_packets = number_packets or self.number_packets
         self.number_bins = number_bins or self.number_bins
@@ -430,6 +434,7 @@ class BinFile(object):
         Gives results compressed into number_horns
         """
         t1 = time.time()
+        self.get_param_data()  # always get to point after header in file
         self.packets_to_skip = packets_to_skip or self.packets_to_skip
         self.number_packets = number_packets or self.number_packets
         self.number_bins = number_bins or self.number_bins
@@ -562,4 +567,8 @@ class BinFile(object):
                 self.pixeldic[pixel] = get_rowcol_for_cable(cable)
         self.pixel_label = dict((v, k) for k, v in self.pixeldic.iteritems())
 
-            
+    def sti_cross_correlate(self, total_time,
+                            sti_time):
+        self.sti_cc = sti_correlate(self.filename, total_time, 
+                                    sti_time)
+
