@@ -572,5 +572,11 @@ class BinFile(object):
         t1 = time.time()
         self.sti_cc = sti_correlate(self.filename, total_time, 
                                     sti_time)
+        self.sti_totpower = numpy.zeros((self.num_horns, self.sti_cc.shape[2],
+                                         self.sti_cc.shape[3]), dtype='complex')
+        for i in range(self.num_horns):
+            self.sti_totpower[i, :, :] = self.sti_cc[i, i, :, :]
+        self.sti_totpower.shape = (self.num_rows, self.num_cols, self.sti_cc.shape[2],
+                                   self.sti_cc.shape[3])
         t2 = time.time()
         print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
