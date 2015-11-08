@@ -576,7 +576,10 @@ class BinFile(object):
                                          self.sti_cc.shape[3]), dtype='complex')
         for i in range(self.num_rows*self.num_cols):
             self.sti_totpower[i, :, :] = self.sti_cc[i, i, :, :]
-        self.sti_totpower.shape = (self.num_rows, self.num_cols, self.sti_cc.shape[2],
-                                   self.sti_cc.shape[3])
+        self.sti_totpower = numpy.reshape(self.sti_totpower, 
+                                          (self.num_rows, self.num_cols, 
+                                           self.sti_cc.shape[2],
+                                           self.sti_cc.shape[3]),
+                                          order='F')
         t2 = time.time()
         print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
