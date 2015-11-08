@@ -569,6 +569,8 @@ class BinFile(object):
 
     def sti_cross_correlate(self, total_time,
                             sti_time):
+        t1 = time.time()
         self.sti_cc = sti_correlate(self.filename, total_time, 
                                     sti_time)
-
+        t2 = time.time()
+        print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
