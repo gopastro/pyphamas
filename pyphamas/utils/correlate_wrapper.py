@@ -76,4 +76,5 @@ def sti_correlate(filename, total_time=None,
     outputs = [p.get() for p in results]
     for i in range(Nsti):
         cross_corr[:, :, :, i] = outputs[i][1]
+    pool.terminate()
     return cross_corr
