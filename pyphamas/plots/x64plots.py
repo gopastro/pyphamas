@@ -410,7 +410,7 @@ class X64PlotBase:
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
-        if not hasattr(self.bf, 'data_out') and not hasattr(self.bf, 'data_accum'):
+        if not hasattr(self.bf, 'data_out') and not hasattr(self.bf, 'data_accum') and not hasattr(self.bf, 'sti_totpower'):
             raise Exception("BinFile instance does not have any data.")
         if not hold:
             self.clear()
@@ -466,16 +466,20 @@ class X64PlotBase:
     def implot_data(self, bf, data_type='amp',
                     vmin=None, vmax=None,
                     hold=False, title=None,
-                    colorbar=True, **kwargs):
+                    colorbar=True, sti=False, **kwargs):
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
         self.check_alive()
         if not hold:
             self.clear()
-        if not hasattr(self.bf, 'cross_corr'):
+        if not hasattr(self.bf, 'cross_corr') and not hasattr(self.bf, 'sti_cc'):
             raise Exception("BinFile does not have cross correlation data. get_cross_corr_data() first on binfile")
-        if not hasattr(self.bf, 'cc'):
+        if sti:
+            if not hasattr(self.bf, 'sti_cc'):
+                raise Exception("BinFile does not have sti cross corr data. Run sti_cross_correlate first")
+            self.bf.cc = self.bf.sti_cc.mean(axis=3).mean(axis=2)
+        else:
             self.bf.cc = self.bf.cross_corr.mean(axis=2)
         if MATPLOTLIBV1_0:
             interpolation = 'none'
@@ -515,20 +519,23 @@ class X64PlotBase:
         
     def implot_amp(self, bf, vmin=None, vmax=None,
                    hold=False, title=None,
-                   colorbar=True, **kwargs):        
+                   colorbar=True, sti=False, **kwargs):        
         self.implot_data(bf, vmin=vmin, vmax=vmax, 
                          hold=hold, title=title, 
                          colorbar=colorbar,
                          data_type='amp',
+                         sti=sti,
                          **kwargs)
 
     def implot_phase(self, bf, vmin=None, vmax=None,
                      hold=False, title=None,
-                     colorbar=True, **kwargs):        
+                     colorbar=True, sti=False, 
+                     **kwargs):        
         self.implot_data(bf, vmin=vmin, vmax=vmax, 
                          hold=hold, title=title, 
                          colorbar=colorbar,
                          data_type='phase',
+                         sti=sti,
                          **kwargs)
 
 
