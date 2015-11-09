@@ -7,7 +7,7 @@ information and calibrate a GBT DCR FITS files
 #import pyfits
 from .gbtfits import GBTFITS
 import os
-import numpy as np
+import numpy
 
 class DCRFITS(GBTFITS):
     def __init__(self, filename):
@@ -16,7 +16,7 @@ class DCRFITS(GBTFITS):
     def obtain_time_samples(self):
         if (self.hdulist[0].header['BACKEND']  != 'DCR'):
             raise Exception("Method only applies for DCR FITS file")      
-        self.dcrTimes = self.hdulist[3].data['TIMETAG']
+        self.dcrTimes = numpy.array(self.hdulist[3].data['TIMETAG'])
 
     def obtain_data(self):
         dataTable = self.hdulist['DATA'].data
@@ -53,7 +53,7 @@ class DCRFITS(GBTFITS):
         toff = data[:, iport, calOff]
         ton  = data[:, iport, calOn]
       
-        counts_per_K = np.sum((ton - toff)/tCal) / len(ton) ##Gain
+        counts_per_K = numpy.sum((ton - toff)/tCal) / len(ton) ##Gain
         ta = 0.5 * (ton + toff) / counts_per_K - tCal/2.0 
         self.calib_data_vector = ta
         return self.calib_data_vector

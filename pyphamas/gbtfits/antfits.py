@@ -9,17 +9,20 @@ class ANTFITS(GBTFITS):
         if (self.hdulist[2].header['EXTNAME']  != 'ANTPOSGR'):
             raise Exception("Method only applies for ANTENNA FITS file")
         ## get location of tracking center on sky
-        self.obsc_az = self.hdulist['ANTPOSGR'].data['OBSC_AZ']
-        self.obsc_el = self.hdulist['ANTPOSGR'].data['OBSC_EL']
+        # older pyfits hasa FITS record output when you get data out
+        # fix it by casting to numpy arrays
+        self.obsc_az = numpy.array(self.hdulist['ANTPOSGR'].data['OBSC_AZ'])
+        self.obsc_el = numpy.array(self.hdulist['ANTPOSGR'].data['OBSC_EL'])
         ## get 'actual' direction of antenna (with servo errors)
-        self.mnt_az = self.hdulist['ANTPOSGR'].data['MNT_AZ']
-        self.mnt_el = self.hdulist['ANTPOSGR'].data['MNT_EL']
+        self.mnt_az = numpy.array(self.hdulist['ANTPOSGR'].data['MNT_AZ'])
+        self.mnt_el = numpy.array(self.hdulist['ANTPOSGR'].data['MNT_EL'])
         ## get computed (at the center of each scan) command values to 
         ## remove pointing model
-        self.sobsc_az = self.hdulist[0].header['SOBSC_AZ']
-        self.sobsc_el = self.hdulist[0].header['SOBSC_EL']
-        self.smntc_az = self.hdulist[0].header['SMNTC_AZ']
-        self.smntc_el = self.hdulist[0].header['SMNTC_EL']
+        self.sobsc_az = numpy.array(self.hdulist[0].header['SOBSC_AZ'])
+        self.sobsc_el = numpy.array(self.hdulist[0].header['SOBSC_EL'])
+        self.smntc_az = numpy.array(self.hdulist[0].header['SMNTC_AZ'])
+        self.smntc_el = numpy.array(self.hdulist[0].header['SMNTC_EL'])
+
 
     def obtain_time_samples(self):
         """
