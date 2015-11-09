@@ -570,6 +570,7 @@ class X64PlotBase:
         self.set_legend(loc='best')
         
     def plot_receiver_row_spec(self, bf, rxrow, configfile=None,
+                               sti=False,
                                hold=False):
         """
         Plots the spectral power for a receiver row.
@@ -584,10 +585,14 @@ class X64PlotBase:
                 raise Exception("Read in config file first using read_xml_config method of BinaryFile instance")
         else:
             self.bf.read_xml_config(configfile)
-        if not hasattr(self.bf, 'data_out'):
+        if not hasattr(self.bf, 'data_out') and not hasattr(self.bf, 'sti_totpower'):
             raise Exception("BinFile instance does not have any data.")
         if not hold:
             self.clear()
+        if sti:
+            if not hasattr(self.bf, 'sti_totpower'):
+                raise Exception("If using STI total power run sti_cross_correlate first")
+            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.sti_totpower)).mean(axis=3))
         if not hasattr(self.bf, 'spec'):
             self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
         self.lines = []        
