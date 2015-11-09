@@ -406,7 +406,7 @@ class X64PlotBase:
         self.set_subplot_title("%s" % self.bf.basename)
         self.set_legend(loc='best')
 
-    def plot_all_spec(self, bf, hold=False):
+    def plot_all_spec(self, bf, sti=False, hold=False):
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
@@ -415,10 +415,15 @@ class X64PlotBase:
         if not hold:
             self.clear()
         #if not hasattr(self.bf, 'spec'):
-        if hasattr(self.bf, 'data_accum'):
-            self.bf.spec = 10.*numpy.log10(self.bf.data_accum)
+        if sti:
+            if not hasattr(self.bf, 'sti_totpower'):
+                raise Exception("If using STI total power run sti_cross_correlate first")
+            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.sti_totpower)).mean(axis=3))
         else:
-            self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
+            if hasattr(self.bf, 'data_accum'):
+                self.bf.spec = 10.*numpy.log10(self.bf.data_accum)
+            else:
+                self.bf.spec = 10.*numpy.log10((numpy.abs(self.bf.data_out)**2).mean(axis=3))
         self.lines = []
         for row in xrange(self.bf.num_rows):
             for col in xrange(self.bf.num_cols):
