@@ -17,14 +17,16 @@ def gauss(x, height, width, center, offset):
 
 class DCRPoint(object):
     def __init__(self, projId="AGBT15B_338", 
-                 session=4, scan=9):
+                 session=4, scan=9, 
+                 fileroot=None):
         self.projId = projId
         self.session = session
         self.scan = scan
         self.projDir = self.projId + "_0" + str(self.session)
+        self.fileroot = fileroot
 
     def gatherData(self):
-        self.sl = scanLog(self.projDir)
+        self.sl = scanLog(self.projDir, fileroot=self.fileroot)
         antFile = self.sl.getAntenna(self.scan)
         dcrFile = self.sl.getDCR(self.scan)
         print antFile
