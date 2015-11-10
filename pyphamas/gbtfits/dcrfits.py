@@ -21,7 +21,9 @@ class DCRFITS(GBTFITS):
     def obtain_data(self):
         dataTable = self.hdulist['DATA'].data
         self.data = dataTable.field('DATA')
-        
+        if self.data.ndim == 3:
+            self.data.shape = (self.data.shape[0], self.data.shape[1])
+
     def calibrate(self):
         tCal = 3.3 # Standard value
         iport = 1        
