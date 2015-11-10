@@ -16,7 +16,7 @@ class DCRFITS(GBTFITS):
     def obtain_time_samples(self):
         if (self.hdulist[0].header['BACKEND']  != 'DCR'):
             raise Exception("Method only applies for DCR FITS file")      
-        self.dcrTimes = numpy.array(self.hdulist[3].data['TIMETAG'])
+        self.dcrTimes = self.hdulist[3].data['TIMETAG']
 
     def obtain_data(self):
         dataTable = self.hdulist['DATA'].data

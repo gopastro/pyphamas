@@ -11,11 +11,11 @@ class ANTFITS(GBTFITS):
         ## get location of tracking center on sky
         # older pyfits hasa FITS record output when you get data out
         # fix it by casting to numpy arrays
-        self.obsc_az = numpy.array(self.hdulist['ANTPOSGR'].data['OBSC_AZ'])
-        self.obsc_el = numpy.array(self.hdulist['ANTPOSGR'].data['OBSC_EL'])
+        self.obsc_az = self.hdulist['ANTPOSGR'].data['OBSC_AZ']
+        self.obsc_el = self.hdulist['ANTPOSGR'].data['OBSC_EL']
         ## get 'actual' direction of antenna (with servo errors)
-        self.mnt_az = numpy.array(self.hdulist['ANTPOSGR'].data['MNT_AZ'])
-        self.mnt_el = numpy.array(self.hdulist['ANTPOSGR'].data['MNT_EL'])
+        self.mnt_az = self.hdulist['ANTPOSGR'].data['MNT_AZ']
+        self.mnt_el = self.hdulist['ANTPOSGR'].data['MNT_EL']
         ## get computed (at the center of each scan) command values to 
         ## remove pointing model
         self.sobsc_az = self.hdulist[0].header['SOBSC_AZ']
@@ -31,7 +31,7 @@ class ANTFITS(GBTFITS):
         """
         if (self.hdulist[2].header['EXTNAME']  != 'ANTPOSGR'):
             raise Exception("Method only applies for ANTENNA FITS file")      
-        self.antTimes = numpy.array(self.hdulist['ANTPOSGR'].data['DMJD'])
+        self.antTimes = self.hdulist['ANTPOSGR'].data['DMJD']
         return self.antTimes
 
     def compute_pointing_model(self):
@@ -54,5 +54,5 @@ class ANTFITS(GBTFITS):
         self.compute_pointing_model()
         self.crossEl = ((self.obsc_az - self.mnt_az - self.pnt_az) * 60.) * numpy.cos(numpy.radians(self.mnt_el))
         self.El = (self.obsc_el - self.mnt_el - self.pnt_el)*60.
-        return self.crossEl,self.El
+        return self.crossEl, self.El
 
