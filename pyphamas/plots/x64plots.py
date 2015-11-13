@@ -689,7 +689,28 @@ class X64PlotBase:
             self.set_legend(loc='best', prop={'size': 6})
         self.set_xlabel(xtype)
         self.set_figtitle("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
+
+    def plot_TA_spec(self, spec, ymin=0, ymax=40.0, 
+                     hold=False):
+        if not hold:
+            self.clear()
+        for row in range(2, 8):
+            for col in range(1, 9):
+                r = (row - 2) * 8
+                pl_idx = r + col
+                if spec.has_key("%d,%d" % (row, col)):
+                    pix = "%d,%d" % (row, col)
+                    ax = pl.add_subplot(6, 8, pl_idx)
+                    pl.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec[pix], linestyle='steps-mid', label=pix)            
+                    pl.set_ylim(ymin, ymax)
+                    if pl_idx != 1:
+                        ax.set_xticklabels([])
+                        ax.set_yticklabels([])
+                else:
+                    print "%d,%d not available" % (row, col)
+                    continue
         
+
 
 
 class X64Plot(X64PlotBase, gtk.Window):
