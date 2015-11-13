@@ -690,7 +690,7 @@ class X64PlotBase:
         self.set_xlabel(xtype)
         self.set_figtitle("%s %s %s" % (dpoint.projDir, dpoint.source, dpoint.scan))
 
-    def plot_TA_spec(self, spec, ymin=0, ymax=40.0, 
+    def plot_TA_spec(self, spec, bf, ymin=0, ymax=40.0, 
                      hold=False):
         if not hold:
             self.clear()
