@@ -700,9 +700,9 @@ class X64PlotBase:
                 pl_idx = r + col
                 if spec.has_key("%d,%d" % (row, col)):
                     pix = "%d,%d" % (row, col)
-                    ax = pl.add_subplot(6, 8, pl_idx)
-                    pl.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec[pix], linestyle='steps-mid', label=pix)            
-                    pl.set_ylim(ymin, ymax)
+                    ax = self.add_subplot(6, 8, pl_idx)
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec[pix], linestyle='steps-mid', label=pix)            
+                    self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
                         ax.set_yticklabels([])
