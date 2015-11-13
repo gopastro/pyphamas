@@ -1,4 +1,4 @@
-from pyphamas.utils.file_utils get_gbtscan_file
+from pyphamas.utils.file_utils import get_gbtscan_file
 from pyphamas import BinFile
 import numpy
 
