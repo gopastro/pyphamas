@@ -134,8 +134,9 @@ class BinFile(object):
     
         # Calculate the number of packets
         self.total_packets = (self.file_length - GULP_HEADER_LENGTH)/self.dist_between
+        self.total_seconds = self.total_packets * 512./50.e6
         if verbose:
-            print "Number of total packets available: %d (%g seconds)" % (self.total_packets, self.total_packets * 512./50.e6)
+            print "Number of total packets available: %d (%g seconds)" % (self.total_packets, self.total_seconds)
 
         # Create element/bin packet table
         self.I = numpy.zeros((self.num_rows*self.num_cols, self.num_bins), 
