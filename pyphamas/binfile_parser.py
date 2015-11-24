@@ -10,6 +10,7 @@ import numpy
 import time
 from xml.etree.ElementTree import parse
 from pyphamas.utils import sti_correlate
+import pickle
 
 UDP_HEADER_LENGTH = 66
 GULP_HEADER_LENGTH = 24
@@ -584,3 +585,19 @@ class BinFile(object):
                                           order='F')
         t2 = time.time()
         print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
+
+    def save_sti_pickles(self):
+        if not hasattr(self, 'sti_cc'):
+            raise Exception("First run sti_cross_correlate before saving pickle file")
+        basedir, fname = os.path.split(bf.filename)
+        newdir = os.path.join(basedir, 'cross')
+        if not os.path.exists(newdir):
+            os.makedirs(newdir)
+        bfile, _ = os.path.splitext(fname)
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        pickle.dump(self.sti_cc, open(cc_pklfile, 'wb'))
+        print "Done writing cross_corr pickle file %s" % cc_pklfile
+        pickle.dump(self.sti_totpower, open(tp_pklfile, 'wb'))
+        print "Done writing total power pickle file %s" % tp_pklfile
+
