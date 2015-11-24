@@ -601,3 +601,19 @@ class BinFile(object):
         pickle.dump(self.sti_totpower, open(tp_pklfile, 'wb'))
         print "Done writing total power pickle file %s" % tp_pklfile
 
+    def load_sti_pickles(self):
+        if hasattr(self, 'sti_cc'):
+            print "Already has sti_cc and sti_totpower"
+            return
+        basedir, fname = os.path.split(self.filename)
+        newdir = os.path.join(basedir, 'cross')
+        if not os.path.exists(newdir):
+            raise Exception("Does not contain dir %s" % newdir)
+        bfile, _ = os.path.splitext(fname)
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        self.sti_cc = pickle.load(cc_pklfile)
+        print "Done loading sti_cc from %s" % cc_pklfile
+        self.sti_totpower = pickle.load(tp_pklfile)
+        print "Done loading sti_totpower from %s" % tp_pklfile
+
