@@ -612,8 +612,8 @@ class BinFile(object):
         bfile, _ = os.path.splitext(fname)
         cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
         tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
-        self.sti_cc = pickle.load(cc_pklfile)
+        self.sti_cc = pickle.load(open(cc_pklfile, 'rb'))
         print "Done loading sti_cc from %s" % cc_pklfile
-        self.sti_totpower = pickle.load(tp_pklfile)
+        self.sti_totpower = pickle.load(open(tp_pklfile, 'rb'))
         print "Done loading sti_totpower from %s" % tp_pklfile
 
