@@ -589,7 +589,7 @@ class BinFile(object):
     def save_sti_pickles(self):
         if not hasattr(self, 'sti_cc'):
             raise Exception("First run sti_cross_correlate before saving pickle file")
-        basedir, fname = os.path.split(bf.filename)
+        basedir, fname = os.path.split(self.filename)
         newdir = os.path.join(basedir, 'cross')
         if not os.path.exists(newdir):
             os.makedirs(newdir)
