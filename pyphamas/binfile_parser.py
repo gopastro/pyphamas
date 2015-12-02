@@ -613,8 +613,8 @@ class BinFile(object):
         if not os.path.exists(newdir):
             raise Exception("Does not contain dir %s" % newdir)
         bfile, _ = os.path.splitext(fname)
-        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
-        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.dmp')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.dmp')
         self.sti_cc = numpy.fromfile(cc_pklfile)
         print "Done loading sti_cc from %s" % cc_pklfile
         self.sti_totpower = numpy.fromfile(tp_pklfile)
