@@ -586,22 +586,25 @@ class BinFile(object):
         t2 = time.time()
         print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
 
-    def save_sti_pickles(self):
+    def save_sti_dumps(self):
+        """
+        Changed to use numpy tofile instead of pickle for speed
+        """
         if not hasattr(self, 'sti_cc'):
-            raise Exception("First run sti_cross_correlate before saving pickle file")
+            raise Exception("First run sti_cross_correlate before saving dump file")
         basedir, fname = os.path.split(self.filename)
         newdir = os.path.join(basedir, 'cross')
         if not os.path.exists(newdir):
             os.makedirs(newdir)
         bfile, _ = os.path.splitext(fname)
-        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
-        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
-        pickle.dump(self.sti_cc, open(cc_pklfile, 'wb'))
-        print "Done writing cross_corr pickle file %s" % cc_pklfile
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.dmp')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.dmp')
+        self.sti_cc.tofile(cc_pklfile)
+        print "Done writing cross_corr dump file %s" % cc_pklfile
         pickle.dump(self.sti_totpower, open(tp_pklfile, 'wb'))
-        print "Done writing total power pickle file %s" % tp_pklfile
+        print "Done writing total power dump file %s" % tp_pklfile
 
-    def load_sti_pickles(self):
+    def load_sti_dumps(self):
         if hasattr(self, 'sti_cc'):
             print "Already has sti_cc and sti_totpower"
             return
@@ -612,8 +615,8 @@ class BinFile(object):
         bfile, _ = os.path.splitext(fname)
         cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
         tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
-        self.sti_cc = pickle.load(open(cc_pklfile, 'rb'))
+        self.sti_cc = numpy.fromfile(cc_pklfile)
         print "Done loading sti_cc from %s" % cc_pklfile
-        self.sti_totpower = pickle.load(open(tp_pklfile, 'rb'))
+        self.sti_totpower = numpy.fromfile(tp_pklfile)
         print "Done loading sti_totpower from %s" % tp_pklfile
 
