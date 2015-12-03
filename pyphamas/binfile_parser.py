@@ -588,35 +588,42 @@ class BinFile(object):
 
     def save_sti_dumps(self):
         """
-        Changed to use numpy tofile instead of pickle for speed
+        Changed back to pickle protocol 2
         """
         if not hasattr(self, 'sti_cc'):
             raise Exception("First run sti_cross_correlate before saving dump file")
+        t1 = time.time()
         basedir, fname = os.path.split(self.filename)
         newdir = os.path.join(basedir, 'cross')
         if not os.path.exists(newdir):
             os.makedirs(newdir)
         bfile, _ = os.path.splitext(fname)
-        cc_pklfile = os.path.join(newdir, bfile + '_cross.dmp')
-        tp_pklfile = os.path.join(newdir, bfile + '_totpower.dmp')
-        self.sti_cc.tofile(cc_pklfile)
-        print "Done writing cross_corr dump file %s" % cc_pklfile
-        pickle.dump(self.sti_totpower, open(tp_pklfile, 'wb'))
-        print "Done writing total power dump file %s" % tp_pklfile
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        pickle.dump(self.sti_cc, open(cc_pklfile, 'w'), protocol=2)
+        t2 = time.time()
+        print "Done writing cross_corr dump file %s in %.2f seconds" % (cc_pklfile, t2-t1)
+        pickle.dump(self.sti_totpower, open(tp_pklfile, 'w'), protocol=2)
+        t2 = time.time()
+        print "Done writing total power dump file %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
     def load_sti_dumps(self):
         if hasattr(self, 'sti_cc'):
             print "Already has sti_cc and sti_totpower"
             return
+        t1 = time.time()
         basedir, fname = os.path.split(self.filename)
         newdir = os.path.join(basedir, 'cross')
         if not os.path.exists(newdir):
             raise Exception("Does not contain dir %s" % newdir)
         bfile, _ = os.path.splitext(fname)
-        cc_pklfile = os.path.join(newdir, bfile + '_cross.dmp')
-        tp_pklfile = os.path.join(newdir, bfile + '_totpower.dmp')
-        self.sti_cc = numpy.fromfile(cc_pklfile)
-        print "Done loading sti_cc from %s" % cc_pklfile
-        self.sti_totpower = numpy.fromfile(tp_pklfile)
-        print "Done loading sti_totpower from %s" % tp_pklfile
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        self.sti_cc = pickle.load(open(cc_pklfile, 'r'))
+        t2 = time.time()
+        print "Done loading sti_cc from %s in %.2f seconds" % (cc_pklfile, t2-t1)
+        self.sti_totpower = pickle.load(open(tp_pklfile, 'r'))
+        t3 = time.time()
+        print "Done loading sti_totpower from %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
+        
