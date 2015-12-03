@@ -650,19 +650,20 @@ class BinFile(object):
     def correct_phase_dispersion(self):
         factors = self.make_factors()
         self.remove_bad_inputs() # reduce from 48 to 38 elements
-        nbins, ntimes = self.sti_cc.shape[2], self.sti_cc.shape[3]
-        corr = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
-        corr_unnorm = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
-        for n in range(ntimes):
-            for b in range(nbins):
-                B = numpy.diag(numpy.exp(1j*factors[:, b]))
-                A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, self.sti_cc[:, :, b, n], B.conj().transpose()])))) # for nomalization
-                corr[:, :, b, n] = reduce(numpy.dot, [A, B, self.sti_cc[:, :, b, n], B.conj().transpose(), A])
+        nbins = self.sti_cc.shape[2]
+        sti_cc = self.sti_cc.mean(axis=3)
+        corr = numpy.zeros((38, 38, nbins), dtype='complex')
+        corr_unnorm = numpy.zeros((38, 38, nbins), dtype='complex')
+        #for n in range(ntimes):
+        for b in range(nbins):
+            B = numpy.diag(numpy.exp(1j*factors[:, b]))
+            A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, sti_cc[:, :, b], B.conj().transpose()]) ) )) # for nomalization
+            corr[:, :, b] = reduce(numpy.dot, [A, B, sti_cc[:, :, b], B.conj().transpose(), A])
             #uncorr[:, :, b] = reduce(numpy.dot, [A, newcc[:, :, b], A])
-                corr_unnorm[:, :, b, n] = reduce(numpy.dot, [B, self.sti_cc[:, :, b, n], B.conj().transpose()])
-        self.sti_cc = corr
-        self.sti_totpower_corrected = numpy.zeros((38, self.sti_cc.shape[2],
-                                                   self.sti_cc.shape[3]), dtype='complex')
+            corr_unnorm[:, :, b] = reduce(numpy.dot, [B, sti_cc[:, :, b], B.conj().transpose()])
+        #self.sti_cc = corr.copy()
+        self.sti_cc_corrected = corr
+        self.sti_totpower_corrected = numpy.zeros((38, nbins), dtype='complex')
         for i in range(38):
-            self.sti_totpower_corrected[i, :, :] = corr_unnorm[i, i, :, :]        
+            self.sti_totpower_corrected[i, :] = corr_unnorm[i, i, :]        
         return corr_unnorm
