@@ -604,7 +604,7 @@ class BinFile(object):
         t2 = time.time()
         print "Done writing cross_corr dump file %s in %.2f seconds" % (cc_pklfile, t2-t1)
         pickle.dump(self.sti_totpower, open(tp_pklfile, 'w'), protocol=2)
-        t2 = time.time()
+        t3 = time.time()
         print "Done writing total power dump file %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
     def load_sti_dumps(self):
