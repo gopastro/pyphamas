@@ -626,4 +626,43 @@ class BinFile(object):
         t3 = time.time()
         print "Done loading sti_totpower from %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
+    def make_factors(self):
+        b = numpy.arange(1, 64)
+        c_y = [-0.0056, -2.6627]
+        c_z = [0.1417, 1.0651]
+        factors = numpy.zeros((38, 63), dtype='float')
+        factors[:12, :] = 1
+        factors[12:24, :] = numpy.dot(numpy.ones((12, 1)), 
+                                      numpy.reshape((c_y[0]*b+c_y[1]), (1, 63)))
+        factors[24:, :] = numpy.dot(numpy.ones((14, 1)), 
+                                    numpy.reshape((c_z[0]*b+c_z[1]), (1, 63)))
+        return factors
+
+    def remove_bad_inputs(self):
+        if not hasattr(self, 'sti_cc'):
+            print "Does not have sti_cc and sti_totpower"
+            return        
+        bad_inputs = [14, 15, 20, 21, 31, 38, 44, 45, 46, 47]
+        bad_inputs = numpy.array(bad_inputs)
+        self.sti_cc = numpy.delete(self.sti_cc, bad_inputs, axis=0)
+        self.sti_cc = numpy.delete(self.sti_cc, bad_inputs, axis=1)
         
+    def correct_phase_dispersion(self):
+        factors = self.make_factor()
+        self.remove_bad_inputs() # reduce from 48 to 38 elements
+        nbins, ntimes = self.bf.sti_cc.shape[2], self.bf.sti_cc.shape[3]
+        corr = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
+        corr_unnorm = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
+        for n in ntimes:
+            for b in range(63):
+                B = numpy.diag(numpy.exp(1j*factors[:, b]))
+                A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, self.sti_cc[:, :, b, n], B.conj().transpose()])))) # for nomalization
+                corr[:, :, b, n] = reduce(numpy.dot, [A, B, self.sti_cc[:, :, b, n], B.conj().transpose(), A])
+            #uncorr[:, :, b] = reduce(numpy.dot, [A, newcc[:, :, b], A])
+                corr_unnorm[:, :, b, n] = reduce(numpy.dot, [B, self.sti_cc[:, :, b, n], B.conj().transpose()])
+        self.sti_cc = corr
+        self.sti_totpower_corrected = numpy.zeros((38, self.sti_cc.shape[2],
+                                                   self.sti_cc.shape[3]), dtype='complex')
+        for i in range(38):
+            self.sti_totpower_corrected[i, :, :] = corr_unnorm[i, i, :, :]        
+    
