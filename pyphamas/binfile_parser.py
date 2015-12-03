@@ -654,7 +654,7 @@ class BinFile(object):
         corr = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
         corr_unnorm = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
         for n in range(ntimes):
-            for b in range(63):
+            for b in range(nbins):
                 B = numpy.diag(numpy.exp(1j*factors[:, b]))
                 A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, self.sti_cc[:, :, b, n], B.conj().transpose()])))) # for nomalization
                 corr[:, :, b, n] = reduce(numpy.dot, [A, B, self.sti_cc[:, :, b, n], B.conj().transpose(), A])
@@ -665,4 +665,4 @@ class BinFile(object):
                                                    self.sti_cc.shape[3]), dtype='complex')
         for i in range(38):
             self.sti_totpower_corrected[i, :, :] = corr_unnorm[i, i, :, :]        
-    
+        return corr_unnorm
