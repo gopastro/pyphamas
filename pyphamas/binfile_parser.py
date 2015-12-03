@@ -650,7 +650,7 @@ class BinFile(object):
     def correct_phase_dispersion(self):
         factors = self.make_factors()
         self.remove_bad_inputs() # reduce from 48 to 38 elements
-        nbins, ntimes = self.bf.sti_cc.shape[2], self.bf.sti_cc.shape[3]
+        nbins, ntimes = self.sti_cc.shape[2], self.sti_cc.shape[3]
         corr = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
         corr_unnorm = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
         for n in ntimes:
