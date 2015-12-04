@@ -711,7 +711,7 @@ class X64PlotBase:
                     continue
         
     def plot_totpower_grid(self, bf, onoff=None, ymin=0, ymax=40.0,
-                           hold=False, log=True):
+                           hold=False, log=True, title=None):
         if not hold:
             self.clear()
         if onoff is None:
@@ -741,6 +741,7 @@ class X64PlotBase:
     def plot_cross_angle_grid(self, bf, refpixel='3,3', onoff=None,
                               off=None, 
                               ymin=-3, ymax=3,
+                              title=None,
                               hold=False):
         if not hold:
             self.clear()
@@ -769,10 +770,14 @@ class X64PlotBase:
                 else:
                     print "%d,%d not available" % (row, col)
                     continue        
+        self.redraw_plot()
+        if title is not None:
+            self.set_figtitle("%s" % title)
 
     def plot_cross_amplitude_grid(self, bf, refpixel='3,3', onoff=None,
                                   off=None, Tsys=None,
                                   ymin=-3, ymax=3,
+                                  title=None,
                                   hold=False):
         if not hold:
             self.clear()
@@ -803,7 +808,9 @@ class X64PlotBase:
                 else:
                     print "%d,%d not available" % (row, col)
                     continue        
-
+        self.redraw_plot()
+        if title is not None:
+            self.set_figtitle("%s" % title)
 
 
 
