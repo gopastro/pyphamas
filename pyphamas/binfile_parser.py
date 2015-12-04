@@ -113,7 +113,8 @@ class BinFile(object):
                                       order='F')
         self.bad_inputs = [14, 15, 20, 21, 31, 38, 44, 45, 46, 47]
         self.bad_inputs = numpy.array(self.bad_inputs)
-
+        self.map_pixel_spec = map_pixel_spec
+        self.map_spec_pixel = map_spec_pixel
 
     def get_param_data(self, verbose=False):
         self.fp.seek(0)

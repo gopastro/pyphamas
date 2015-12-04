@@ -710,6 +710,30 @@ class X64PlotBase:
                     print "%d,%d not available" % (row, col)
                     continue
         
+    def plot_totpower_grid(self, bf, ymin=0, ymax=40.0,
+                           hold=False, log=True):
+        if not hold:
+            self.clear()
+        for row in range(2, 8):
+            for col in range(1, 9):
+                r = (row - 2) * 8
+                pl_idx = r + col
+                if bf.map_pixel_spec.has_key("%d,%d" % (row, col)):
+                    pix = "%d,%d" % (row, col)
+                    ax = self.add_subplot(6, 8, pl_idx)
+                    spec_idx = bf.map_pixel_spec[pix]
+                    if log:
+                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.log10(numpy.abs(bf.sti_cc[spec_idx, spec_idx, :, :].mean(axis=1))), linestyle='steps-mid', label=pix)
+                    else:
+                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.abs(bf.sti_cc[spec_idx, spec_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                    self.set_ylim(ymin, ymax)
+                    if pl_idx != 1:
+                        ax.set_xticklabels([])
+                        ax.set_yticklabels([])
+                else:
+                    print "%d,%d not available" % (row, col)
+                    continue        
+
 
 
 
