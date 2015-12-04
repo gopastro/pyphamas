@@ -747,7 +747,7 @@ class X64PlotBase:
                     pix = "%d,%d" % (row, col)
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
-                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.angle(bf.sti_cc[spec_idx, refpixel_idx, :, :].mean(axis=1))), linestyle='steps-mid', label=pix)
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.angle(bf.sti_cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
