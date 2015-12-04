@@ -739,6 +739,7 @@ class X64PlotBase:
                     continue        
 
     def plot_cross_angle_grid(self, bf, refpixel='3,3', onoff=None,
+                              off=None, 
                               ymin=-3, ymax=3,
                               hold=False):
         if not hold:
@@ -756,7 +757,11 @@ class X64PlotBase:
                     pix = "%d,%d" % (row, col)
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
-                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                    if off is None:
+                        spec = numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))
+                    else: 
+                        spec = numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))/numpy.sqrt(numpy.abs(off[spec_idx, spec_idx, :, :].mean(axis=1)) * numpy.abs(off[refpixel_idx, refpixel_idx, :, :].mean(axis=1)))
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec, linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
@@ -766,8 +771,9 @@ class X64PlotBase:
                     continue        
 
     def plot_cross_amplitude_grid(self, bf, refpixel='3,3', onoff=None,
-                              ymin=-3, ymax=3,
-                              hold=False):
+                                  off=None, 
+                                  ymin=-3, ymax=3,
+                                  hold=False):
         if not hold:
             self.clear()
         refpixel_idx = bf.map_pixel_spec[refpixel]
@@ -783,7 +789,11 @@ class X64PlotBase:
                     pix = "%d,%d" % (row, col)
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
-                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                    if off is None:
+                        spec = numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))
+                    else:
+                        spec = numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))/numpy.sqrt(numpy.abs(off[spec_idx, spec_idx, :, :].mean(axis=1)) * numpy.abs(off[refpixel_idx, refpixel_idx, :, :].mean(axis=1)))
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec, linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
