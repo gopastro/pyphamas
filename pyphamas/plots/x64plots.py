@@ -802,7 +802,12 @@ class X64PlotBase:
                         spec = spec * Tsys[pix]
                     self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec, linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
-                    if pl_idx != 1:
+                    if pl_idx == 1:
+                        ax.set_xticklabels([])
+                        #ax.set_yticklabels([])
+                    elif pl_idx == 48:
+                        ax.set_yticklabels([])
+                    else:
                         ax.set_xticklabels([])
                         ax.set_yticklabels([])
                 else:
