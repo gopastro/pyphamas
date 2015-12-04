@@ -12,12 +12,12 @@ def get_Tsys(hot_scan, sky_scan, scanLen=10.0,
     """
     bf = BinFile(get_gbtscan_file(direc=direc, scan=hot_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     hot = bf.sti_totpower
 
     bf = BinFile(get_gbtscan_file(direc=direc, scan=sky_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     sky = bf.sti_totpower
 
     bf.read_xml_config(config)
@@ -43,12 +43,12 @@ def get_spec(on_scan, off_scan, Tsys, scanLen=30.0,
     """
     bf = BinFile(get_gbtscan_file(direc=direc, scan=on_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     on = bf.sti_totpower
 
     bf = BinFile(get_gbtscan_file(direc=direc, scan=off_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     off = bf.sti_totpower    
 
     bf.read_xml_config(config)
