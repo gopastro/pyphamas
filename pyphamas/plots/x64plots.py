@@ -738,7 +738,7 @@ class X64PlotBase:
                               hold=False):
         if not hold:
             self.clear()
-        refpixel_idx = bf.map_pixel_spec[pix]
+        refpixel_idx = bf.map_pixel_spec[refpixel]
         for row in range(2, 8):
             for col in range(1, 9):
                 r = (row - 2) * 8
