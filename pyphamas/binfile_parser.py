@@ -68,6 +68,9 @@ class BinFile(object):
                                                    15, 16, 31, 32, 47, 48, 63, 64]), 
                                       (8, 8),
                                       order='F')
+        self.bad_inputs = [14, 15, 20, 21, 31, 38, 44, 45, 46, 47]
+        self.bad_inputs = numpy.array(self.bad_inputs)
+
 
     def get_param_data(self, verbose=False):
         self.fp.seek(0)
@@ -626,38 +629,43 @@ class BinFile(object):
         t3 = time.time()
         print "Done loading sti_totpower from %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
-    def make_factors(self):
+    def make_factors(self, c_y=[-0.0056, -2.6627],
+                     c_z=[0.1417, 1.0651]):
+        """
+        you can pass fits to c_y and c_z
+        """
         b = numpy.arange(1, 64)
-        c_y = [-0.0056, -2.6627]
-        c_z = [0.1417, 1.0651]
-        factors = numpy.zeros((38, 63), dtype='float')
-        factors[:12, :] = 1
-        factors[12:24, :] = numpy.dot(numpy.ones((12, 1)), 
+        #c_y = [-0.0056, -2.6627]
+        #c_z = [0.1417, 1.0651]
+        self.factors = numpy.zeros((38, 63), dtype='float')
+        self.factors[:12, :] = 1
+        self.factors[12:24, :] = numpy.dot(numpy.ones((12, 1)), 
                                       numpy.reshape((c_y[0]*b+c_y[1]), (1, 63)))
-        factors[24:, :] = numpy.dot(numpy.ones((14, 1)), 
+        self.factors[24:, :] = numpy.dot(numpy.ones((14, 1)), 
                                     numpy.reshape((c_z[0]*b+c_z[1]), (1, 63)))
-        return factors
+        return self.factors
 
     def remove_bad_inputs(self):
         if not hasattr(self, 'sti_cc'):
             print "Does not have sti_cc and sti_totpower"
             return        
-        bad_inputs = [14, 15, 20, 21, 31, 38, 44, 45, 46, 47]
-        bad_inputs = numpy.array(bad_inputs)
-        self.sti_cc = numpy.delete(self.sti_cc, bad_inputs, axis=0)
-        self.sti_cc = numpy.delete(self.sti_cc, bad_inputs, axis=1)
+        self.sti_cc = numpy.delete(self.sti_cc, self.bad_inputs, axis=0)
+        self.sti_cc = numpy.delete(self.sti_cc, self.bad_inputs, axis=1)
         
-    def correct_phase_dispersion(self):
-        factors = self.make_factors()
-        self.remove_bad_inputs() # reduce from 48 to 38 elements
+    def correct_phase_dispersion(self, c_y=[-0.0056, -2.6627],
+                                 c_z=[0.1417, 1.0651]):
+        if not hasattr(self, 'factors'):
+            factors = self.make_factors(c_y=c_y, c_z=c_z)
+        if self.sti_cc.shape[0] == 48:
+            self.remove_bad_inputs() # reduce from 48 to 38 elements
         nbins = self.sti_cc.shape[2]
         sti_cc = self.sti_cc.mean(axis=3)
         corr = numpy.zeros((38, 38, nbins), dtype='complex')
         corr_unnorm = numpy.zeros((38, 38, nbins), dtype='complex')
         #for n in range(ntimes):
         for b in range(nbins):
-            B = numpy.diag(numpy.exp(1j*factors[:, b]))
-            A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, sti_cc[:, :, b], B.conj().transpose()]) ) )) # for nomalization
+            B = numpy.diag(numpy.exp(1j*self.factors[:, b]))
+            A = numpy.diag(1./numpy.sqrt(numpy.diag(reduce(numpy.dot, [B, sti_cc[:, :, b], B.conj().transpose()]) ) )) # for normalization
             corr[:, :, b] = reduce(numpy.dot, [A, B, sti_cc[:, :, b], B.conj().transpose(), A])
             #uncorr[:, :, b] = reduce(numpy.dot, [A, newcc[:, :, b], A])
             corr_unnorm[:, :, b] = reduce(numpy.dot, [B, sti_cc[:, :, b], B.conj().transpose()])

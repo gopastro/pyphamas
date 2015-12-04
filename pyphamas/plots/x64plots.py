@@ -470,7 +470,7 @@ class X64PlotBase:
         self.bf = bf
         if self.bf is None:
             raise Exception("Need to pass in a BinFile instance to plot object")
-        self.check_alive()
+        self.check_alive() 
         if not hold:
             self.clear()
         if not hasattr(self.bf, 'cross_corr') and not hasattr(self.bf, 'sti_cc'):

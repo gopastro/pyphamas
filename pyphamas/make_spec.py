@@ -62,4 +62,41 @@ def get_spec(on_scan, off_scan, Tsys, scanLen=30.0,
     return spec
 
 
+def get_dispersion_correction(on_scan, off_scan, scanLen=30.0,
+                              deltaT=0.1,
+                              direc='/media/Disk1/nov14_2015'):
+    """
+    Gets the linear fits for c_y and c_z 
+    given On and Off scans
+    """
+    bf = BinFile(get_gbtscan_file(direc=direc, scan=on_scan)[0], 
+                 number_packets=3000)
+    bf.sti_cross_correlate(scanLen, deltaT)
+    Ron = bf.sti_cc.mean(axis=3)
+    Ron = numpy.delete(Ron, bf.bad_inputs, axis=0)
+    Ron = numpy.delete(Ron, bf.bad_inputs, axis=1)
+
+    bf = BinFile(get_gbtscan_file(direc=direc, scan=off_scan)[0], 
+                 number_packets=3000)
+    bf.sti_cross_correlate(scanLen, deltaT)
+    Roff = bf.sti_cc.mean(axis=3)
+    Roff = numpy.delete(Roff, bf.bad_inputs, axis=0)
+    Roff = numpy.delete(Roff, bf.bad_inputs, axis=1)
     
+    alpha_y = numpy.zeros(bf.num_bins)
+    alpha_z = numpy.zeros(bf.num_bins)
+    
+    for b in range(bf.num_bins):
+        onoff = Ron[:, :, b] - Roff[:, :, b]
+        Rxy = onoff[:12, 12:24]
+        Rxz = onoff[:12, 24:]
+        alpha_y[b] = numpy.angle(Rxy.sum())
+        alpha_z[b] = numpy.angle(Rxz.sum())
+        
+    x = numpy.range(1, bf.num_bins+1)
+    c_y = numpy.polyfit(x, numpy.unwrap(alpha_y), 1)
+    c_z = numpy.polyfit(x, numpy.unwrap(alpha_z), 1)
+    return c_y, c_z
+
+
+
