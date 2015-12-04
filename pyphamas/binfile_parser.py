@@ -622,13 +622,45 @@ class BinFile(object):
         bfile, _ = os.path.splitext(fname)
         cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
         tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        if not os.path.exists(cc_pklfile):
+            raise Exception("No stored pickle file %s" % cc_pklfile)
         self.sti_cc = pickle.load(open(cc_pklfile, 'r'))
         t2 = time.time()
         print "Done loading sti_cc from %s in %.2f seconds" % (cc_pklfile, t2-t1)
+        if not os.path.exists(tp_pklfile):
+            raise Exception("No stored pickle file %s" % tp_pklfile)
         self.sti_totpower = pickle.load(open(tp_pklfile, 'r'))
         t3 = time.time()
         print "Done loading sti_totpower from %s in %.2f seconds" % (tp_pklfile, t3-t2)
 
+    def load_sti_cross_correlate(self, total_time,
+                                 sti_time):
+        """
+        This method looks for an already existing cross-correlation
+        data set in the cross directory. If available, just load 
+        it. Else perform the cross correlate and save the pickle dumps
+        """
+        if hasattr(self, 'sti_cc'):
+            print "Already has sti_cc and sti_totpower"
+            return
+        t1 = time.time()
+        basedir, fname = os.path.split(self.filename)
+        newdir = os.path.join(basedir, 'cross')
+        if not os.path.exists(newdir):
+            raise Exception("Does not contain dir %s" % newdir)
+        bfile, _ = os.path.splitext(fname)
+        cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
+        tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
+        if not os.path.exists(cc_pklfile):
+            print "No stored pickle file %s" % cc_pklfile
+            print "Will perform sti cross_correlate"
+            self.sti_cross_correlate(self, total_time,
+                                     sti_time)
+            self.save_sti_dumps()
+        else:
+            print "Stored pickle file %s found" % cc_pklfile
+            self.load_sti_dumps()
+        
     def make_factors(self, c_y=[-0.0056, -2.6627],
                      c_z=[0.1417, 1.0651]):
         """

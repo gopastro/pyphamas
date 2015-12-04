@@ -71,14 +71,14 @@ def get_dispersion_correction(on_scan, off_scan, scanLen=30.0,
     """
     bf = BinFile(get_gbtscan_file(direc=direc, scan=on_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     Ron = bf.sti_cc.mean(axis=3)
     Ron = numpy.delete(Ron, bf.bad_inputs, axis=0)
     Ron = numpy.delete(Ron, bf.bad_inputs, axis=1)
 
     bf = BinFile(get_gbtscan_file(direc=direc, scan=off_scan)[0], 
                  number_packets=3000)
-    bf.sti_cross_correlate(scanLen, deltaT)
+    bf.load_sti_cross_correlate(scanLen, deltaT)
     Roff = bf.sti_cc.mean(axis=3)
     Roff = numpy.delete(Roff, bf.bad_inputs, axis=0)
     Roff = numpy.delete(Roff, bf.bad_inputs, axis=1)
