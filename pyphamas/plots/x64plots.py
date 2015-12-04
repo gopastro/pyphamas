@@ -771,7 +771,7 @@ class X64PlotBase:
                     continue        
 
     def plot_cross_amplitude_grid(self, bf, refpixel='3,3', onoff=None,
-                                  off=None, 
+                                  off=None, Tsys=None,
                                   ymin=-3, ymax=3,
                                   hold=False):
         if not hold:
@@ -793,6 +793,8 @@ class X64PlotBase:
                         spec = numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))
                     else:
                         spec = numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))/numpy.sqrt(numpy.abs(off[spec_idx, spec_idx, :, :].mean(axis=1)) * numpy.abs(off[refpixel_idx, refpixel_idx, :, :].mean(axis=1)))
+                    if Tsys is not None:
+                        spec = spec * Tsys[pix]
                     self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec, linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
