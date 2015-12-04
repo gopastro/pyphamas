@@ -765,6 +765,33 @@ class X64PlotBase:
                     print "%d,%d not available" % (row, col)
                     continue        
 
+    def plot_cross_amplitude_grid(self, bf, refpixel='3,3', onoff=None,
+                              ymin=-3, ymax=3,
+                              hold=False):
+        if not hold:
+            self.clear()
+        refpixel_idx = bf.map_pixel_spec[refpixel]
+        if onoff is None:
+            cc = bf.sti_cc
+        else:
+            cc = onoff
+        for row in range(2, 8):
+            for col in range(1, 9):
+                r = (row - 2) * 8
+                pl_idx = r + col
+                if bf.map_pixel_spec.has_key("%d,%d" % (row, col)):
+                    pix = "%d,%d" % (row, col)
+                    ax = self.add_subplot(6, 8, pl_idx)
+                    spec_idx = bf.map_pixel_spec[pix]
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.abs(cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                    self.set_ylim(ymin, ymax)
+                    if pl_idx != 1:
+                        ax.set_xticklabels([])
+                        ax.set_yticklabels([])
+                else:
+                    print "%d,%d not available" % (row, col)
+                    continue        
+
 
 
 
