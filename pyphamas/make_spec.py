@@ -93,7 +93,7 @@ def get_dispersion_correction(on_scan, off_scan, scanLen=30.0,
         alpha_y[b] = numpy.angle(Rxy.sum())
         alpha_z[b] = numpy.angle(Rxz.sum())
         
-    x = numpy.range(1, bf.num_bins+1)
+    x = numpy.arange(1, bf.num_bins+1)
     c_y = numpy.polyfit(x, numpy.unwrap(alpha_y), 1)
     c_z = numpy.polyfit(x, numpy.unwrap(alpha_z), 1)
     return c_y, c_z
