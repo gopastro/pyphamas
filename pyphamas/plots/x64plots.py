@@ -710,10 +710,14 @@ class X64PlotBase:
                     print "%d,%d not available" % (row, col)
                     continue
         
-    def plot_totpower_grid(self, bf, ymin=0, ymax=40.0,
+    def plot_totpower_grid(self, bf, onoff=None, ymin=0, ymax=40.0,
                            hold=False, log=True):
         if not hold:
             self.clear()
+        if onoff is None:
+            cc = bf.sti_cc
+        else:
+            cc = onoff
         for row in range(2, 8):
             for col in range(1, 9):
                 r = (row - 2) * 8
@@ -723,9 +727,9 @@ class X64PlotBase:
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
                     if log:
-                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.log10(numpy.abs(bf.sti_cc[spec_idx, spec_idx, :, :].mean(axis=1))), linestyle='steps-mid', label=pix)
+                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.log10(numpy.abs(cc[spec_idx, spec_idx, :, :].mean(axis=1))), linestyle='steps-mid', label=pix)
                     else:
-                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.abs(bf.sti_cc[spec_idx, spec_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                        self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.abs(cc[spec_idx, spec_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
@@ -734,11 +738,16 @@ class X64PlotBase:
                     print "%d,%d not available" % (row, col)
                     continue        
 
-    def plot_cross_angle_grid(self, bf, refpixel='3,3', ymin=-3, ymax=3,
+    def plot_cross_angle_grid(self, bf, refpixel='3,3', onoff=None,
+                              ymin=-3, ymax=3,
                               hold=False):
         if not hold:
             self.clear()
         refpixel_idx = bf.map_pixel_spec[refpixel]
+        if onoff is None:
+            cc = bf.sti_cc
+        else:
+            cc = onoff
         for row in range(2, 8):
             for col in range(1, 9):
                 r = (row - 2) * 8
@@ -747,7 +756,7 @@ class X64PlotBase:
                     pix = "%d,%d" % (row, col)
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
-                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.angle(bf.sti_cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
+                    self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1)), linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
                         ax.set_xticklabels([])
