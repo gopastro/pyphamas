@@ -41,7 +41,7 @@ def correlate(filename, output_filename,
                            (2, 1, 0))
     corr = numpy.zeros((nele, nele, nbins), dtype='complex')
     for i in range(nbins):
-        corr[:, :, i] = data[:, :, i] + data[:, :, i].transpose() + \
+        corr[:, :, i] = data[:, :, i] + data[:, :, i].conj().transpose() + \
             numpy.diag(numpy.diag(data[:, :, i]))
     if remove_out:
         print "Removing output file %s" % output_filename
