@@ -759,9 +759,9 @@ class X64PlotBase:
                     ax = self.add_subplot(6, 8, pl_idx)
                     spec_idx = bf.map_pixel_spec[pix]
                     if off is None:
-                        spec = numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))
+                        spec = numpy.unwrap(numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1)))
                     else: 
-                        spec = numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))/numpy.sqrt(numpy.abs(off[spec_idx, spec_idx, :, :].mean(axis=1)) * numpy.abs(off[refpixel_idx, refpixel_idx, :, :].mean(axis=1)))
+                        spec = numpy.unwrap(numpy.angle(cc[spec_idx, refpixel_idx, :, :].mean(axis=1))/numpy.sqrt(numpy.abs(off[spec_idx, spec_idx, :, :].mean(axis=1)) * numpy.abs(off[refpixel_idx, refpixel_idx, :, :].mean(axis=1))))
                     self.plot(numpy.arange(bf.bin_start, bf.bin_end+1), spec, linestyle='steps-mid', label=pix)
                     self.set_ylim(ymin, ymax)
                     if pl_idx != 1:
