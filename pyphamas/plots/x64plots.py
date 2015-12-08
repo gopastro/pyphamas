@@ -805,8 +805,8 @@ class X64PlotBase:
                     if pl_idx == 1:
                         ax.set_xticklabels([])
                         #ax.set_yticklabels([])
-                    elif pl_idx == 48:
-                        ax.set_yticklabels([])
+                    #elif pl_idx == 48:
+                    #    ax.set_yticklabels([])
                     else:
                         ax.set_xticklabels([])
                         ax.set_yticklabels([])
