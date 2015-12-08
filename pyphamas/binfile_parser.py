@@ -735,7 +735,7 @@ class BinFile(object):
         if self.sti_cc.shape[0] == 48:
             self.remove_bad_inputs() # reduce from 48 to 38 elements
         nbins = self.sti_cc.shape[2]
-        #sti_cc = self.sti_cc.mean(axis=3)
+        sti_cc = self.sti_cc
         ntimes = self.sti_cc.shape[3]
         corr = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
         corr_unnorm = numpy.zeros((38, 38, nbins, ntimes), dtype='complex')
