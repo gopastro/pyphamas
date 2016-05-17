@@ -639,7 +639,7 @@ class BinFile(object):
         newdir = os.path.join(basedir, 'cross')
         if not os.path.exists(newdir):
             os.makedirs(newdir)
-        par_file = os.path.join(newdir, bfile + '.par')
+        par_file = os.path.join(newdir, fname + '.par')
         pickle.dump(self, open(par_file, 'w'), protocol=2)
         print "Done writing parameter file %s in %.2f seconds" % (par_file, time.time()-t1)
         
