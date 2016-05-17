@@ -657,7 +657,7 @@ class BinFile(object):
                 raise Exception("No stored pickle parameter file %s" % par_file)
         par = pickle.load(open(par_file, 'r'))
         for k, v in par.items():
-            if k != 'fp':
+            if k not in ('fp', 'filename'):
                 setattr(self, k, v)
 
         print "Done loading parameter file %s in %.2f seconds" % (par_file, time.time()-t1)           
