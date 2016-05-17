@@ -640,7 +640,7 @@ class BinFile(object):
         if not os.path.exists(newdir):
             os.makedirs(newdir)
         par_file = os.path.join(newdir, fname + '.par')
-        pickle.dump(self, open(par_file, 'w'), protocol=2)
+        pickle.dump(self.__dict__, open(par_file, 'w'), protocol=2)
         print "Done writing parameter file %s in %.2f seconds" % (par_file, time.time()-t1)
     def load_par(self):
         t1 = time.time()
