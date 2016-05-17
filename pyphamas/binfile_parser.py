@@ -664,6 +664,8 @@ class BinFile(object):
         if not os.path.exists(newdir):
             raise Exception("Does not contain dir %s" % newdir)
         bfile, _ = os.path.splitext(fname)
+        if bfile.rfind('_corr') != -1:
+            bfile, _ = bfile.split('_corr')
         cc_pklfile = os.path.join(newdir, bfile + '_cross.pkl')
         tp_pklfile = os.path.join(newdir, bfile + '_totpower.pkl')
         if not os.path.exists(cc_pklfile):
