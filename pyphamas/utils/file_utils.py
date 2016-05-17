@@ -20,3 +20,12 @@ def get_gbtscan_file(direc='/media/Disk1/nov8_2015',
     lis = glob.glob(os.path.join(direc, "*_%d.bin" % scan))
     lis.sort(key=os.path.getctime, reverse=True)
     return lis[:numfiles]
+
+
+def get_gbtscan_corr_file(direc='/media/Disk1/nov8_2015', 
+                          scan=17, numfiles=1):
+    if not os.path.exists(direc):
+        raise Exception("direc: %s does not exits" % direc)
+    lis = glob.glob(os.path.join(direc, "*_%d_corr.bin" % scan))
+    lis.sort(key=os.path.getctime, reverse=True)
+    return lis[:numfiles]
