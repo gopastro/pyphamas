@@ -649,7 +649,7 @@ class BinFile(object):
         par_file = os.path.join(newdir, fname + '.par')
         if not os.path.exists(par_file):
             if fname.rfind('_corr') != -1:
-                fname, _ = bfile.split('_corr')
+                fname, _ = fname.split('_corr')
                 par_file = os.path.join(newdir, fname + '.par')
                 if not os.path.exists(par_file):
                     raise Exception("No stored pickle parameter file %s" % par_file)
