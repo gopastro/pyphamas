@@ -633,6 +633,16 @@ class BinFile(object):
         t2 = time.time()
         print "Done with sti_cross_correlate in %.2f seconds" % (t2-t1)
 
+    def save_par(self):
+        t1 = time.time()
+        basedir, fname = os.path.split(self.filename)
+        newdir = os.path.join(basedir, 'cross')
+        if not os.path.exists(newdir):
+            os.makedirs(newdir)
+        par_file = os.path.join(newdir, bfile + '.par')
+        pickle.dump(self, open(par_file, 'w'), protocol=2)
+        print "Done writing parameter file %s in %.2f seconds" % (par_file, time.time()-t1)
+        
     def save_sti_dumps(self):
         """
         Changed back to pickle protocol 2
