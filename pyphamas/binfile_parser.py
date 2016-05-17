@@ -653,7 +653,8 @@ class BinFile(object):
         for k, v in par.items():
             if k != 'fp':
                 setattr(self, k, v)
-         print "Done loading parameter file %s in %.2f seconds" % (par_file, time.time()-t1)           
+
+        print "Done loading parameter file %s in %.2f seconds" % (par_file, time.time()-t1)           
 
         
     def save_sti_dumps(self):
