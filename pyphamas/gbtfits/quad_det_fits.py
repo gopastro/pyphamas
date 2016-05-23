@@ -26,4 +26,12 @@ class QuadrantDetectorFITS(GBTFITS):
         self.total_offset = self.hdulist['QDATA'].data['total_offset']
         self.mc_total_offset = self.hdulist['QDATA'].data['mc_total_offset']
 
+    def mc_total_offset(self, time):
+        """
+        Given a time array, reinterpolates intrinsic time array
+        to given time array and return mc_total_offset
+        """
+        return numpy.interp(time, self.quadTimes, self.mc_total_offset)
+
+        
 
