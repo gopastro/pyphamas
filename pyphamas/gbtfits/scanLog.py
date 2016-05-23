@@ -243,6 +243,8 @@ class scanLog:
     def getRx(self, scanNo):
         return self.rcvrDict[scanNo]
 
+    def getQuadDet(self, scanNo):
+        return self.dict['QuadrantDetector'][scanNo]
 
     #
     # function to return the naked FITS file name. Assumes a GO fits file
